@@ -259,6 +259,17 @@ body { font-family:'Tajawal',sans-serif; min-height:100vh; color:var(--txt); ove
 .cp:hover { transform:scale(1.2); }
 .cp.active { border-color:var(--txt); }
 
+/* ─── MEMORIES ─── */
+.mem-card { background:var(--card-bg); border:1px solid var(--bdr); border-radius:18px; overflow:hidden; backdrop-filter:blur(8px); transition:transform .18s,box-shadow .18s; cursor:pointer; }
+.mem-card:hover { transform:translateY(-3px); box-shadow:0 12px 40px rgba(0,0,0,.15); }
+.mem-img { width:100%; height:160px; object-fit:cover; display:block; }
+.mem-canvas-thumb { width:100%; height:120px; display:block; border-bottom:1px solid var(--bdr); }
+.mem-body { padding:14px; }
+.mem-date { font-size:.68rem; color:var(--acc); font-weight:700; margin-bottom:4px; }
+.mem-title { font-size:.92rem; font-weight:800; color:var(--txt); margin-bottom:6px; }
+.mem-desc { font-size:.76rem; color:var(--mut); line-height:1.55; }
+.mem-empty { text-align:center; padding:60px 20px; color:var(--mut); font-size:.88rem; grid-column:1/-1; }
+
 /* ─── FAB ─── */
 .fab { position:fixed; bottom:22px; left:22px; width:54px; height:54px; border-radius:50%; background:linear-gradient(135deg,#1565c0,#00bcd4); border:none; color:#fff; font-size:1.5rem; cursor:pointer; box-shadow:0 6px 26px rgba(21,101,192,.42); display:flex; align-items:center; justify-content:center; z-index:50; transition:transform .2s; }
 .fab:hover { transform:scale(1.12); }
@@ -313,7 +324,51 @@ body { font-family:'Tajawal',sans-serif; min-height:100vh; color:var(--txt); ove
 .auth-google { width:100%; padding:10px; border:1.5px solid rgba(255,255,255,.3); border-radius:12px; background:rgba(255,255,255,.1); color:#fff; font-family:'Tajawal',sans-serif; font-size:.88rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all .2s; }
 .auth-google:hover { background:rgba(255,255,255,.2); }
 
-/* loading spinner */
+/* ─── COMPANION CHARACTER ─── */
+#buddy-wrap {
+  position:fixed; bottom:90px; right:20px; z-index:200;
+  display:none; flex-direction:column; align-items:center; gap:6px;
+  pointer-events:none;
+}
+#buddy-wrap.on { display:flex; }
+#buddy-head {
+  width:80px; height:80px; border-radius:50%; position:relative;
+  cursor:pointer; pointer-events:all;
+  animation:buddyFloat 3s ease-in-out infinite;
+  filter:drop-shadow(0 6px 18px rgba(0,0,0,0.25));
+  transition:transform .3s;
+}
+#buddy-head:hover { transform:scale(1.12); }
+@keyframes buddyFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+#buddy-face { width:80px; height:80px; border-radius:50%; overflow:visible; position:relative; }
+#buddy-bubble {
+  background:rgba(255,255,255,.95); border-radius:14px; padding:7px 11px;
+  font-size:.72rem; color:#333; font-weight:700; max-width:140px; text-align:center;
+  box-shadow:0 4px 18px rgba(0,0,0,.18); pointer-events:none;
+  animation:bubblePop .3s ease; line-height:1.4;
+}
+@keyframes bubblePop { from{transform:scale(0.7);opacity:0} to{transform:scale(1);opacity:1} }
+
+/* Buddy Customizer Panel */
+#buddy-panel {
+  position:fixed; bottom:180px; right:16px; z-index:210;
+  background:var(--sur); border:1.5px solid var(--bdr); border-radius:20px;
+  padding:18px; width:230px; display:none;
+  backdrop-filter:blur(16px); box-shadow:0 8px 40px rgba(0,0,0,.22);
+}
+#buddy-panel.on { display:block; }
+.bp-title { font-size:.85rem; font-weight:800; color:var(--acc); margin-bottom:12px; }
+.bp-row { margin-bottom:10px; }
+.bp-lbl { font-size:.7rem; color:var(--mut); font-weight:700; margin-bottom:5px; }
+.bp-skins { display:flex; gap:6px; flex-wrap:wrap; }
+.bp-skin { width:34px; height:34px; border-radius:50%; cursor:pointer; border:3px solid transparent; transition:all .2s; font-size:1.3rem; display:flex; align-items:center; justify-content:center; }
+.bp-skin:hover { transform:scale(1.15); }
+.bp-skin.active { border-color:var(--acc); box-shadow:0 0 0 2px var(--acc); }
+.bp-hairs { display:flex; gap:5px; flex-wrap:wrap; }
+.bp-hair { padding:4px 8px; border-radius:20px; border:1.5px solid var(--bdr); font-size:.68rem; font-weight:700; cursor:pointer; background:var(--sur2); color:var(--txt); transition:all .15s; }
+.bp-hair:hover { border-color:var(--acc); color:var(--acc); }
+.bp-hair.active { background:var(--acc); color:#fff; border-color:var(--acc); }
+
 .spin { display:inline-block; width:18px; height:18px; border:2.5px solid rgba(255,255,255,.3); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; vertical-align:middle; }
 @keyframes spin { to{transform:rotate(360deg)} }
 
@@ -413,7 +468,8 @@ onAuthStateChanged(auth, user => {
   </div>
   <div class="topbar-right">
     <button class="icon-btn" onclick="toggleSound()" id="sound-btn">🎵 <span data-i="sound">صوت</span></button>
-    <button class="icon-btn" onclick="toggleTimeFormat()" id="timefmt-btn">١٢س</button>
+    <button class="icon-btn" onclick="toggleBuddy()" id="buddy-btn">🧑 <span id="buddy-btn-lbl">رفيق</span></button>
+    <button class="icon-btn" onclick="toggleTimeFormat()" id="timefmt-btn"><span id="timefmt-label">١٢س</span></button>
     <button class="icon-btn" onclick="openBgPicker()">🎨 <span data-i="bg">خلفية</span></button>
     <div class="theme-toggle" id="theme-btn" onclick="toggleTheme()" title="تبديل الوضع">
       <div class="tt-track"></div>
@@ -431,7 +487,8 @@ onAuthStateChanged(auth, user => {
 <div class="tabs" id="main-tabs" style="display:none">
   <button class="tab active" onclick="go('weekly')" data-i="tabWeekly">📅 الجدول الأسبوعي</button>
   <button class="tab" onclick="go('annual')" data-i="tabAnnual">🗓 السنوي</button>
-  <button class="tab" onclick="go('habits')" data-i="tabHabits">⭐ Habit Tracker</button>
+  <button class="tab" onclick="go('habits')" data-i="tabHabits">⭐ متتبع العادات</button>
+  <button class="tab" onclick="go('memories')" data-i="tabMemories">📸 ذكرياتي</button>
 </div>
 
 <!-- ─── PAGE: WEEKLY ─── -->
@@ -476,11 +533,67 @@ onAuthStateChanged(auth, user => {
     <div class="ht-grid" id="htGrid"></div>
     <button class="add-hb" onclick="openHb()">＋ <span data-i="addHabitBtn">إضافة عادة</span></button>
     <div class="hb-suggestions">
-      <div class="hb-sugg-title" data-i="suggTitle">💡 اقتراحات عادات شائعة — اضغط لإضافة</div>
-      <div class="hb-sugg-grid" id="sugg-grid"></div>
+      <div class="hb-sugg-title" onclick="toggleSuggestions()" style="cursor:pointer;user-select:none;display:flex;align-items:center;justify-content:space-between;">
+        <span data-i="suggCta">👆 اضغطني إذا أردت اقتراحاً لعادات تتمارسها</span>
+        <span id="sugg-arrow" style="font-size:.9rem;transition:transform .3s;">▼</span>
+      </div>
+      <div class="hb-sugg-grid" id="sugg-grid" style="display:none;margin-top:8px;"></div>
     </div>
     <div class="streaks" id="streaks"></div>
     <div class="ht-score" id="htScore"></div>
+  </div>
+</div>
+
+<!-- ─── PAGE: MEMORIES ─── -->
+<div class="page" id="page-memories">
+  <div class="sh" style="margin-top:14px;">
+    <h2>📸 <span data-i="memoriesTitle">ذكرياتي</span></h2>
+    <p data-i="memoriesHint">سجّل لحظاتك الجميلة • ستُذكَّر بها سنوياً</p>
+  </div>
+  <div style="max-width:900px;margin:0 auto 14px;display:flex;justify-content:flex-end;">
+    <button class="icon-btn" style="padding:8px 18px;font-size:.85rem;" onclick="openMemModal()">📝 <span data-i="addMemory">+ إضافة ذكرى</span></button>
+  </div>
+  <div id="memories-grid" style="max-width:900px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;"></div>
+</div>
+
+<!-- ─── MEMORY MODAL ─── -->
+<div class="ov" id="memOv" onclick="closeMemModal(event)">
+  <div class="modal" style="max-width:520px;">
+    <h3 id="memH" data-i="addMemory">+ إضافة ذكرى</h3>
+    <label data-i="memoryDate">التاريخ</label>
+    <input type="date" id="memDate">
+    <label data-i="memoryTitle">العنوان</label>
+    <input type="text" id="memTitle" placeholder="">
+    <label data-i="memoryDesc">الوصف</label>
+    <textarea id="memDesc" rows="3" style="resize:vertical;" placeholder=""></textarea>
+
+    <!-- Photo upload -->
+    <label data-i="memoryPhoto">صورة (اختياري)</label>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+      <input type="file" id="memPhoto" accept="image/*" style="display:none" onchange="previewMemPhoto(event)">
+      <button class="btn bs" style="padding:6px 14px;font-size:.76rem;" onclick="document.getElementById('memPhoto').click()">📷 <span data-i="choosePhoto">اختر صورة</span></button>
+      <button class="btn bs" style="padding:6px 14px;font-size:.76rem;" id="memPhotoClearBtn" onclick="clearMemPhoto()" style="display:none">✕ <span data-i="removePhoto">إزالة</span></button>
+    </div>
+    <img id="memPhotoPreview" style="max-width:100%;max-height:180px;border-radius:10px;display:none;margin-bottom:8px;object-fit:cover;">
+
+    <!-- Drawing canvas -->
+    <label data-i="memoryDraw">رسمة (اختياري)</label>
+    <div style="margin-bottom:8px;">
+      <div id="draw-colors" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px;"></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <label style="margin:0;font-size:.72rem;color:var(--mut);" data-i="brushSize">حجم الفرشاة:</label>
+        <input type="range" id="brushSize" min="1" max="24" value="4" style="flex:1;accent-color:var(--acc);">
+        <button class="btn bs" style="padding:4px 10px;font-size:.72rem;" onclick="clearCanvas()" data-i="drawClear">مسح</button>
+        <button class="btn bs" style="padding:4px 10px;font-size:.72rem;" id="eraserBtn" onclick="toggleEraser()">🧹</button>
+      </div>
+      <canvas id="memCanvas" width="460" height="200" style="width:100%;border-radius:10px;border:1.5px solid var(--bdr);cursor:crosshair;background:#fff;touch-action:none;"></canvas>
+    </div>
+
+    <div class="ma">
+      <button class="btn bp" onclick="saveMem()" data-i="saveMem">حفظ الذكرى</button>
+      <button class="btn bd" id="memDelBtn" onclick="deleteMem()" style="display:none" data-i="deleteMemory">حذف</button>
+      <button class="btn bs" onclick="closeMemModal()" data-i="cancelMem">إلغاء</button>
+    </div>
   </div>
 </div>
 
@@ -551,7 +664,8 @@ onAuthStateChanged(auth, user => {
 const LANG = {
   ar: {
     appTitle:'مخططي', sound:'صوت', bg:'خلفية',
-    tabWeekly:'📅 الجدول الأسبوعي', tabAnnual:'🗓 السنوي', tabHabits:'⭐ متتبع العادات',
+    tabWeekly:'📅 الجدول الأسبوعي', tabAnnual:'🗓 السنوي', tabHabits:'⭐ متتبع العادات', tabMemories:'📸 ذكرياتي',
+    timeFmtToggle:'١٢س', timeFmtToggle24:'٢٤س',
     weeklyTitle:'جدولي الأسبوعي', weeklyHint:'اضغط على خلية لإضافة نشاط • اضغط النشاط لتعديله',
     gcalHint:'📤 صدّر جدولك إلى Google Calendar', gcalBtn:'تصدير إلى Google Calendar',
     annualTitle:'جدولي السنوي', annualHint:'اضغط ⭐ عند إنجاز أسبوع كامل',
@@ -565,6 +679,14 @@ const LANG = {
     eventStart:'البداية', eventEnd:'النهاية', eventType:'النوع', eventColor:'اللون',
     save:'حفظ', delete:'حذف', cancel:'إلغاء',
     addHabitTitle:'إضافة عادة', habitName:'اسم العادة', habitDays:'الأيام المستهدفة',
+    memoriesTitle:'ذكرياتي', memoriesHint:'سجّل لحظاتك الجميلة • ستُذكَّر بها سنوياً',
+    addMemory:'+ إضافة ذكرى', memoryDate:'التاريخ', memoryTitle:'العنوان', memoryDesc:'اكتب ما حدث...',
+    memoryPhoto:'صورة (اختياري)', memoryDraw:'رسمة (اختياري)', saveMem:'حفظ الذكرى', cancelMem:'إلغاء',
+    drawClear:'مسح', noMemories:'لا توجد ذكريات بعد — ابدأ بتسجيل لحظة جميلة ✨',
+    choosePhoto:'اختر صورة', removePhoto:'إزالة', brushSize:'حجم الفرشاة:',
+    suggCta:'👆 اضغطني إذا أردت اقتراحاً لعادات تتمارسها',
+    editMemory:'تعديل الذكرى', deleteMemory:'حذف',
+    addCustomHabit:'+ إضافة عادة خاصة بك',
     wlcSub:'أدخل بريدك الإلكتروني لحفظ بياناتك الشخصية — بياناتك تبقى خاصة بك فقط',
     wlcEmailLbl:'📧 البريد الإلكتروني (اختياري)',
     wlcStart:'ابدأ الآن ✨', wlcSkip:'تخطّ — استخدم بدون حساب',
@@ -605,7 +727,8 @@ const LANG = {
   },
   en: {
     appTitle:'My Planner', sound:'Sound', bg:'Theme',
-    tabWeekly:'📅 Weekly', tabAnnual:'🗓 Annual', tabHabits:'⭐ Habits',
+    tabWeekly:'📅 Weekly', tabAnnual:'🗓 Annual', tabHabits:'⭐ Habits', tabMemories:'📸 Memories',
+    timeFmtToggle:'12h', timeFmtToggle24:'24h',
     weeklyTitle:'My Weekly Schedule', weeklyHint:'Tap a cell to add • Tap event to edit',
     gcalHint:'📤 Export your schedule to Google Calendar', gcalBtn:'Export to Google Calendar',
     annualTitle:'My Annual Overview', annualHint:'Tap ⭐ when you complete a week',
@@ -619,6 +742,14 @@ const LANG = {
     eventStart:'Start', eventEnd:'End', eventType:'Type', eventColor:'Color',
     save:'Save', delete:'Delete', cancel:'Cancel',
     addHabitTitle:'Add Habit', habitName:'Habit Name', habitDays:'Target Days',
+    memoriesTitle:'My Memories', memoriesHint:'Record your special moments • You\'ll be reminded annually',
+    addMemory:'+ Add Memory', memoryDate:'Date', memoryTitle:'Title', memoryDesc:'Write what happened...',
+    memoryPhoto:'Photo (optional)', memoryDraw:'Drawing (optional)', saveMem:'Save Memory', cancelMem:'Cancel',
+    drawClear:'Clear', noMemories:'No memories yet — start recording a beautiful moment ✨',
+    choosePhoto:'Choose Photo', removePhoto:'Remove', brushSize:'Brush Size:',
+    suggCta:'👆 Tap me if you\'d like habit suggestions to practice',
+    editMemory:'Edit Memory', deleteMemory:'Delete',
+    addCustomHabit:'+ Add your own habit',
     wlcSub:'Enter your email to save your personal data — your data stays private to you',
     wlcEmailLbl:'📧 Email (optional)',
     wlcStart:'Get Started ✨', wlcSkip:'Skip — use without account',
@@ -829,8 +960,7 @@ async function launchApp(displayName){
   applyBg(currentBg);
   updateDir();
   updateAllI18n();
-  const tfb = document.getElementById('timefmt-btn');
-  if(tfb) tfb.textContent = timeFormat==='24'?(currentLang==='ar'?'١٢س':'12h'):(currentLang==='ar'?'٢٤س':'24h');
+  updateTimeFmtLabel();
   buildBgGrid();
   buildSoundPanel();
   buildSuggestions();
@@ -838,6 +968,10 @@ async function launchApp(displayName){
   renderW();
   renderAnnual();
   renderHT();
+  renderMemories();
+  // init buddy
+  const savedBuddy = await LOAD('buddyOn');
+  if(savedBuddy){ buddyOn=true; document.getElementById('buddy-wrap').classList.add('on'); document.getElementById('buddy-btn').classList.add('active'); loadBuddyConfig(); drawBuddy('happy'); }
 }
 
 function startApp(skip=false){
@@ -860,8 +994,9 @@ function toggleLang(){
   SAVE('lang', currentLang);
   updateDir();
   updateAllI18n();
+  updateTimeFmtLabel();
   document.getElementById('lang-btn').textContent = currentLang==='ar' ? 'EN' : 'ع';
-  renderW(); renderAnnual(); renderHT(); buildSuggestions(); renderTypeSelects();
+  renderW(); renderAnnual(); renderHT(); buildSuggestions(); renderTypeSelects(); renderMemories();
 }
 
 function updateDir(){
@@ -874,6 +1009,9 @@ function updateAllI18n(){
     const key = el.getAttribute('data-i');
     if(T()[key]) el.textContent = T()[key];
   });
+  // Update dynamic placeholders
+  const mt=document.getElementById('memTitle'); if(mt) mt.placeholder=T().memoryTitle||'';
+  const md=document.getElementById('memDesc'); if(md) md.placeholder=T().memoryDesc||'';
 }
 
 /* ═══════════════════════════════════════════
@@ -1633,8 +1771,9 @@ function go(p){
   document.getElementById('page-'+p).classList.add('active');
   document.getElementById('fab').style.display = p==='weekly' ? 'flex' : 'none';
   const tabs = document.querySelectorAll('.tab');
-  const idx = p==='weekly'?0:p==='annual'?1:2;
+  const idx = p==='weekly'?0:p==='annual'?1:p==='habits'?2:3;
   tabs[idx].classList.add('active');
+  if(p==='memories') renderMemories();
 }
 
 /* ═══════════════════════════════════════════
@@ -1663,7 +1802,7 @@ function pickColor(c){
 
 function updateColorFromType(){
   const t = document.getElementById('evT').value;
-  const c = T().types[t]?.c || COLORS[0];
+  const c = T().types[t] && T().types[t].c || COLORS[0];
   pickColor(c);
 }
 
@@ -1692,17 +1831,27 @@ function saveEvts(){
 function toggleTimeFormat(){
   timeFormat = timeFormat==='24' ? '12' : '24';
   SAVE('timeFmt', timeFormat);
-  document.getElementById('timefmt-btn').textContent = timeFormat==='24'
-    ? (currentLang==='ar'?'١٢س':'12h')
-    : (currentLang==='ar'?'٢٤س':'24h');
+  updateTimeFmtLabel();
   renderCal();
+}
+
+function updateTimeFmtLabel(){
+  const lbl = document.getElementById('timefmt-label');
+  if(lbl) lbl.textContent = timeFormat==='24' ? T().timeFmtToggle : T().timeFmtToggle24;
 }
 
 async function renderW(){ await loadEvts(); renderLeg(); renderCal(); renderSum(); }
 
 function renderLeg(){
   const types = T().types;
-  document.getElementById('legend').innerHTML = Object.entries(types).map(([k,v])=>
+  // Show only types that are actually used in events
+  const usedTypes = new Set(evts.map(e=>e.type));
+  const entries = Object.entries(types).filter(([k])=>usedTypes.has(k));
+  if(entries.length===0){
+    document.getElementById('legend').innerHTML='';
+    return;
+  }
+  document.getElementById('legend').innerHTML = entries.map(([k,v])=>
     `<div class="li"><div class="ld" style="background:${v.c}"></div>${v.l}</div>`
   ).join('');
 }
@@ -1735,7 +1884,7 @@ function renderCal(){
     const slots=document.querySelectorAll('.sl');
     const si=sh2*7+ev.day; if(si>=slots.length) return;
     const el=document.createElement('div');
-    const evColor = ev.color || T().types[ev.type]?.c || '#1565c0';
+    const evColor = ev.color || (T().types[ev.type] && T().types[ev.type].c) || '#1565c0';
     el.className='ev';
     el.style.cssText=`top:${(om/60)*SH}px;height:${Math.max((dur/60)*SH-3,22)}px;background:${evColor}22;border-color:${evColor};color:${evColor};`;
     el.innerHTML=`<div class="et">${ev.title}</div><div class="em">${fT(ev.start)} – ${fT(ev.end)}</div>`;
@@ -1760,6 +1909,7 @@ function openEv(day=0,start='08:00'){
   renderTypeSelects();
   document.getElementById('evH').textContent=T().addEvent;
   document.getElementById('evName').value='';
+  document.getElementById('evName').placeholder=currentLang==='ar'?'مثال: قراءة 📖':'e.g. Reading 📖';
   // Populate day select
   const sel=document.getElementById('evDay');
   sel.innerHTML=T().days.map((d,i)=>`<option value="${i}">${d}</option>`).join('');
@@ -1778,13 +1928,14 @@ function openEvEdit(id){
   editEvId=id;
   document.getElementById('evH').textContent=currentLang==='ar'?'تعديل النشاط':'Edit Event';
   document.getElementById('evName').value=ev.title;
+  document.getElementById('evName').placeholder=currentLang==='ar'?'مثال: قراءة 📖':'e.g. Reading 📖';
   const sel=document.getElementById('evDay');
   sel.innerHTML=T().days.map((d,i)=>`<option value="${i}">${d}</option>`).join('');
   sel.value=ev.day;
   document.getElementById('evS').value=ev.start;
   document.getElementById('evE').value=ev.end;
   document.getElementById('evT').value=ev.type||'other';
-  buildColorPick(ev.color || T().types[ev.type||'other']?.c || COLORS[0]);
+  buildColorPick(ev.color || (T().types[ev.type||'other'] && T().types[ev.type||'other'].c) || COLORS[0]);
   document.getElementById('evDel').style.display='block';
   document.getElementById('evOv').classList.add('on');
 }
@@ -1892,8 +2043,198 @@ function toggleA(k,el,yr,mo){
 }
 
 /* ═══════════════════════════════════════════
-   HABITS
+   MEMORIES
 ═══════════════════════════════════════════ */
+let memories=[], editMemId=null;
+let memPhotoData=null, isEraser=false;
+let isDrawing=false, lastX=0, lastY=0;
+let canvasHasContent=false;
+
+const DRAW_COLORS=['#000000','#ffffff','#ef5350','#e91e63','#9c27b0','#673ab7','#3f51b5','#2196f3',
+  '#03a9f4','#00bcd4','#009688','#4caf50','#8bc34a','#cddc39','#ffeb3b','#ffc107',
+  '#ff9800','#ff5722','#795548','#9e9e9e','#607d8b','#1565c0','#2e7d32','#f57f17'];
+
+let drawColor='#000000', brushSz=4;
+
+async function loadMem(){ memories=(await LOAD('memories'))||[]; }
+function saveMem2(){ SAVE('memories',memories); }
+
+function renderMemories(){
+  loadMem().then(()=>{
+    const g=document.getElementById('memories-grid'); g.innerHTML='';
+    if(!memories.length){
+      g.innerHTML=`<div class="mem-empty">${T().noMemories||'لا توجد ذكريات بعد ✨'}</div>`;
+      return;
+    }
+    // Sort newest first
+    const sorted=[...memories].sort((a,b)=>new Date(b.date)-new Date(a.date));
+    sorted.forEach(m=>{
+      const card=document.createElement('div'); card.className='mem-card';
+      card.onclick=()=>openMemModal(m.id);
+      let media='';
+      if(m.photo) media=`<img class="mem-img" src="${m.photo}" alt="">`;
+      else if(m.drawing) media=`<img class="mem-canvas-thumb" src="${m.drawing}" alt="">`;
+      const d=new Date(m.date); const loc=currentLang==='ar'?'ar-SA':'en-US';
+      const dateStr=d.toLocaleDateString(loc,{year:'numeric',month:'long',day:'numeric'});
+      card.innerHTML=`${media}<div class="mem-body">
+        <div class="mem-date">📅 ${dateStr}</div>
+        <div class="mem-title">${m.title||''}</div>
+        <div class="mem-desc">${(m.desc||'').substring(0,120)}${(m.desc||'').length>120?'...':''}</div>
+      </div>`;
+      g.appendChild(card);
+    });
+  });
+}
+
+function buildDrawColors(){
+  const cont=document.getElementById('draw-colors'); if(!cont) return;
+  cont.innerHTML=DRAW_COLORS.map(c=>`
+    <div onclick="setDrawColor('${c}')" id="dc-${c.slice(1)}" style="width:22px;height:22px;border-radius:50%;background:${c};cursor:pointer;border:2.5px solid ${c===drawColor?'var(--acc)':'transparent'};transition:transform .15s;box-shadow:0 1px 4px rgba(0,0,0,.18);" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'"></div>
+  `).join('');
+}
+
+function setDrawColor(c){
+  drawColor=c; isEraser=false;
+  document.getElementById('eraserBtn').style.opacity='1';
+  buildDrawColors();
+}
+
+function toggleEraser(){
+  isEraser=!isEraser;
+  document.getElementById('eraserBtn').style.opacity=isEraser?'0.4':'1';
+}
+
+function initCanvas(){
+  const c=document.getElementById('memCanvas'); if(!c) return;
+  const ctx=c.getContext('2d');
+  ctx.clearRect(0,0,c.width,c.height);
+  canvasHasContent=false;
+  c.onmousedown=e=>startDraw(e,c,ctx);
+  c.onmousemove=e=>draw(e,c,ctx);
+  c.onmouseup=()=>stopDraw();
+  c.onmouseleave=()=>stopDraw();
+  c.ontouchstart=e=>{e.preventDefault();startDraw(e.touches[0],c,ctx);};
+  c.ontouchmove=e=>{e.preventDefault();draw(e.touches[0],c,ctx);};
+  c.ontouchend=()=>stopDraw();
+}
+
+function getPos(e,c){
+  const r=c.getBoundingClientRect();
+  const scaleX=c.width/r.width, scaleY=c.height/r.height;
+  return[(e.clientX-r.left)*scaleX,(e.clientY-r.top)*scaleY];
+}
+
+function startDraw(e,c,ctx){
+  isDrawing=true;
+  [lastX,lastY]=getPos(e,c);
+}
+
+function draw(e,c,ctx){
+  if(!isDrawing) return;
+  const [x,y]=getPos(e,c);
+  ctx.beginPath();
+  ctx.moveTo(lastX,lastY); ctx.lineTo(x,y);
+  const sz=+document.getElementById('brushSize').value;
+  ctx.lineWidth=isEraser?sz*3:sz;
+  ctx.lineCap='round'; ctx.lineJoin='round';
+  ctx.strokeStyle=isEraser?'#ffffff':drawColor;
+  ctx.globalCompositeOperation=isEraser?'destination-out':'source-over';
+  ctx.stroke();
+  [lastX,lastY]=[x,y];
+  canvasHasContent=true;
+}
+
+function stopDraw(){ isDrawing=false; }
+
+function clearCanvas(){
+  const c=document.getElementById('memCanvas'); if(!c) return;
+  const ctx=c.getContext('2d');
+  ctx.clearRect(0,0,c.width,c.height);
+  canvasHasContent=false;
+}
+
+function previewMemPhoto(e){
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    memPhotoData=ev.target.result;
+    const img=document.getElementById('memPhotoPreview');
+    img.src=memPhotoData; img.style.display='block';
+    document.getElementById('memPhotoClearBtn').style.display='inline-flex';
+  };
+  r.readAsDataURL(f);
+}
+
+function clearMemPhoto(){
+  memPhotoData=null;
+  document.getElementById('memPhotoPreview').style.display='none';
+  document.getElementById('memPhoto').value='';
+  document.getElementById('memPhotoClearBtn').style.display='none';
+}
+
+async function openMemModal(id){
+  editMemId=id||null;
+  await loadMem();
+  document.getElementById('memH').textContent=id?T().editMemory||'تعديل الذكرى':T().addMemory||'+ إضافة ذكرى';
+  document.getElementById('memDelBtn').style.display=id?'block':'none';
+  // Update placeholders for current language
+  document.getElementById('memTitle').placeholder=T().memoryTitle||'';
+  document.getElementById('memDesc').placeholder=T().memoryDesc||'';
+  memPhotoData=null;
+  document.getElementById('memPhotoPreview').style.display='none';
+  document.getElementById('memPhoto').value='';
+  document.getElementById('memPhotoClearBtn').style.display='none';
+  isEraser=false;
+  buildDrawColors();
+  initCanvas();
+  if(id){
+    const m=memories.find(x=>x.id===id);
+    if(m){
+      document.getElementById('memDate').value=m.date||'';
+      document.getElementById('memTitle').value=m.title||'';
+      document.getElementById('memDesc').value=m.desc||'';
+      if(m.photo){ memPhotoData=m.photo; const img=document.getElementById('memPhotoPreview'); img.src=m.photo; img.style.display='block'; document.getElementById('memPhotoClearBtn').style.display='inline-flex'; }
+      if(m.drawing){
+        const c=document.getElementById('memCanvas');
+        const img2=new Image(); img2.onload=()=>{ c.getContext('2d').drawImage(img2,0,0); canvasHasContent=true; }; img2.src=m.drawing;
+      }
+    }
+  } else {
+    document.getElementById('memDate').value=new Date().toISOString().split('T')[0];
+    document.getElementById('memTitle').value='';
+    document.getElementById('memDesc').value='';
+  }
+  document.getElementById('memOv').classList.add('on');
+}
+
+function closeMemModal(e){
+  if(e&&e.target!==document.getElementById('memOv')) return;
+  document.getElementById('memOv').classList.remove('on');
+  editMemId=null;
+}
+
+async function saveMem(){
+  const date=document.getElementById('memDate').value;
+  const title=document.getElementById('memTitle').value.trim();
+  const desc=document.getElementById('memDesc').value.trim();
+  if(!title){ alert(currentLang==='ar'?'أدخل عنواناً للذكرى':'Enter a title for this memory'); return; }
+  const c=document.getElementById('memCanvas');
+  let drawing=null;
+  if(canvasHasContent) drawing=c.toDataURL('image/png');
+  await loadMem();
+  const obj={id:editMemId||uid(),date,title,desc,photo:memPhotoData||null,drawing:drawing||null};
+  if(editMemId){ const i=memories.findIndex(x=>x.id===editMemId); memories[i]=obj; }
+  else memories.push(obj);
+  saveMem2(); closeMemModal(); renderMemories();
+}
+
+async function deleteMem(){
+  if(!editMemId) return;
+  if(confirm(currentLang==='ar'?'حذف هذه الذكرى؟':'Delete this memory?')){
+    await loadMem(); memories=memories.filter(x=>x.id!==editMemId); saveMem2(); closeMemModal(); renderMemories();
+  }
+}
+
 let habits=[], comp={};
 async function loadH(){ habits=(await LOAD('habits'))||[]; comp=(await LOAD('htComp'))||{}; }
 function saveH(){ SAVE('habits',habits); }
@@ -1942,18 +2283,7 @@ async function renderHT(){
   updateScore(); renderStreaks();
 }
 
-function updateScore(){
-  const wk=wkKey(htOff); let tot=0,dn=0;
-  habits.forEach(h=>h.days.forEach(di=>{ tot++; if(comp[`${h.id}_${wk}_${di}`]) dn++; }));
-  const pct=tot?Math.round(dn/tot*100):0;
-  const emoji=pct===100?'🏆':pct>=75?'🔥':pct>=50?'💪':pct>=25?'🌱':'✨';
-  document.getElementById('htScore').innerHTML=
-    `<div class="big">${dn}<span style="font-size:1rem;color:var(--mut)">/${tot}</span> ${emoji}</div>
-     <div class="lbl">${T().tasksComplete} • ${pct}%</div>
-     <div class="sbar-w"><div class="sbar" style="width:${pct}%"></div></div>`;
-}
-
-function renderStreaks(){
+function updateScore_unused_replaced_by_buddy_version(){
   const el=document.getElementById('streaks');
   const wk=wkKey(htOff);
   el.innerHTML=habits.map(h=>{
@@ -1970,7 +2300,18 @@ function htMove(d){ htOff+=d; renderHT(); }
 /* ─── HABIT SUGGESTIONS ─── */
 function buildSuggestions(){
   const grid=document.getElementById('sugg-grid');
+  if(!grid) return;
   grid.innerHTML=T().suggestions.map(s=>`<div class="sugg-chip" onclick="addSuggestion('${s.replace(/'/g,"\\'")}')"> ${s}</div>`).join('');
+}
+
+function toggleSuggestions(){
+  const grid=document.getElementById('sugg-grid');
+  const arrow=document.getElementById('sugg-arrow');
+  if(!grid||!arrow) return;
+  const open=grid.style.display==='none';
+  grid.style.display=open?'flex':'none';
+  arrow.style.transform=open?'rotate(180deg)':'rotate(0deg)';
+  if(open) buildSuggestions();
 }
 
 function addSuggestion(name){
@@ -2026,10 +2367,454 @@ async function delHb(){
   }
 }
 
-function closeHb(e){
-  if(e&&e.target!==document.getElementById('hbOv')) return;
-  document.getElementById('hbOv').classList.remove('on'); editHbId=null;
+/* ═══════════════════════════════════════════
+   COMPANION CHARACTER (BUDDY)
+═══════════════════════════════════════════ */
+let buddyOn = false;
+let buddyPanelOpen = false;
+let buddyMood = 'happy'; // 'happy','sad','celebrate'
+let buddyConfig = { hairColor: '#1a1a1a', hair: 'girl1' };
+let buddyBubbleTimer = null;
+
+// Hair colors (B&W style: black, dark brown, light, white/blonde, gray)
+const BUDDY_SKINS = ['#111111','#3a1a00','#6b3a1f','#c8a96e','#e0d5c0','#ffffff'];
+const BUDDY_HAIRS = [
+  { id:'girl1',  label:'🎀 طويل',    gender:'girl' },
+  { id:'girl2',  label:'🌸 موجي',    gender:'girl' },
+  { id:'girl3',  label:'💇 ضفائر',   gender:'girl' },
+  { id:'boy1',   label:'💈 قصير',    gender:'boy'  },
+  { id:'boy2',   label:'🌊 موجي',    gender:'boy'  },
+  { id:'boy3',   label:'⚡ مرفوع',   gender:'boy'  },
+];
+
+const BUDDY_MSGS = {
+  happy: ['أنت رائع! 🌟','هكذا يكون التميز! 💪','استمر، أنت في القمة! 🔥','أحبك يا بطل! ⭐','ممتاز جداً! 🏆'],
+  sad:   ['لا تستسلم! 💙','غداً فرصة جديدة 🌅','أنت أقوى مما تظن! 🤗','خطوة بخطوة ✨','أنا معك دائماً 💫'],
+  celebrate: ['🎉 مبروووك!','🏆 أنت بطل!','🌟 مذهل!','🎊 رائع جداً!'],
+  idle:  ['كيف حالك اليوم؟ 😊','أنا هنا إذا احتجتني!','لا تنسى تسجيل عاداتك! ⭐','اليوم يوم منتج! 💪'],
+};
+
+function toggleBuddy(){
+  buddyOn = !buddyOn;
+  document.getElementById('buddy-wrap').classList.toggle('on', buddyOn);
+  document.getElementById('buddy-btn').classList.toggle('active', buddyOn);
+  if(buddyOn){
+    loadBuddyConfig();
+    drawBuddy(buddyMood);
+    showBuddyMsg('idle');
+  } else {
+    if(buddyPanelOpen) closeBuddyPanel();
+  }
+  SAVE('buddyOn', buddyOn);
 }
+
+function loadBuddyConfig(){
+  const saved = LG('buddyConfig');
+  if(saved) buddyConfig = saved;
+  const habin = document.getElementById('bp-skins');
+  if(habin) buildBuddyPanel();
+}
+
+function saveBuddyConfig(){
+  LS('buddyConfig', buddyConfig);
+}
+
+function drawBuddy(mood){
+  const canvas = document.getElementById('buddy-face');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W=72, H=72;
+  ctx.clearRect(0,0,W,H);
+
+  const hair  = buddyConfig.hair      || 'girl1';
+  const hCol  = buddyConfig.hairColor || '#1a1a1a';
+  const cx=36, cy=40; // face center
+
+  // ── helper: sketch-style stroke ──
+  function sketchLine(x1,y1,x2,y2,w){
+    ctx.save(); ctx.strokeStyle='#111'; ctx.lineWidth=w||1.8;
+    ctx.lineCap='round'; ctx.lineJoin='round';
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore();
+  }
+
+  /* ════ 1. HAIR (drawn behind face) ════ */
+  ctx.save();
+  ctx.fillStyle = hCol;
+  ctx.strokeStyle = '#111'; ctx.lineWidth = 1.6; ctx.lineCap='round';
+
+  if(hair==='girl1'){
+    // Long straight — two side curtains + top dome
+    // top dome
+    ctx.beginPath(); ctx.ellipse(cx, cy-18, 22, 16, 0, Math.PI, 0); ctx.fill(); ctx.stroke();
+    // left curtain
+    ctx.beginPath();
+    ctx.moveTo(cx-22, cy-12);
+    ctx.bezierCurveTo(cx-26, cy+2, cx-26, cy+18, cx-20, cy+30);
+    ctx.lineTo(cx-14, cy+30);
+    ctx.bezierCurveTo(cx-18, cy+18, ctx.lineWidth, cy+6, cx-20, cy-10);
+    ctx.fill(); ctx.stroke();
+    // right curtain
+    ctx.beginPath();
+    ctx.moveTo(cx+22, cy-12);
+    ctx.bezierCurveTo(cx+26, cy+2, cx+26, cy+18, cx+20, cy+30);
+    ctx.lineTo(cx+14, cy+30);
+    ctx.bezierCurveTo(cx+18, cy+18, cx+18, cy+6, cx+20, cy-10);
+    ctx.fill(); ctx.stroke();
+    // tiny bow
+    ctx.save(); ctx.strokeStyle='#111'; ctx.lineWidth=1.2;
+    // left petal of bow
+    ctx.beginPath(); ctx.ellipse(cx-3, cy-30, 4, 3, -0.5, 0, Math.PI*2);
+    ctx.fillStyle='#fff'; ctx.fill(); ctx.stroke();
+    // right petal
+    ctx.beginPath(); ctx.ellipse(cx+3, cy-30, 4, 3, 0.5, 0, Math.PI*2);
+    ctx.fill(); ctx.stroke();
+    // center knot
+    ctx.beginPath(); ctx.arc(cx, cy-30, 2, 0, Math.PI*2);
+    ctx.fillStyle='#111'; ctx.fill();
+    ctx.restore();
+
+  } else if(hair==='girl2'){
+    // Wavy short-medium
+    ctx.beginPath(); ctx.ellipse(cx, cy-18, 22, 15, 0, Math.PI, 0); ctx.fill(); ctx.stroke();
+    // wavy left
+    const waveL=[[cx-22,cy-8],[cx-27,cy+2],[cx-23,cy+12],[cx-26,cy+22],[cx-20,cy+28]];
+    ctx.beginPath(); ctx.moveTo(waveL[0][0],waveL[0][1]);
+    for(let i=1;i<waveL.length;i++){
+      const mx=(waveL[i-1][0]+waveL[i][0])/2, my=(waveL[i-1][1]+waveL[i][1])/2;
+      ctx.quadraticCurveTo(waveL[i-1][0],waveL[i-1][1],mx,my);
+    }
+    ctx.lineTo(cx-16, cy+26); ctx.lineTo(cx-18, cy-10);
+    ctx.fill(); ctx.stroke();
+    // wavy right
+    const waveR=[[cx+22,cy-8],[cx+27,cy+2],[cx+23,cy+12],[cx+26,cy+22],[cx+20,cy+28]];
+    ctx.beginPath(); ctx.moveTo(waveR[0][0],waveR[0][1]);
+    for(let i=1;i<waveR.length;i++){
+      const mx=(waveR[i-1][0]+waveR[i][0])/2, my=(waveR[i-1][1]+waveR[i][1])/2;
+      ctx.quadraticCurveTo(waveR[i-1][0],waveR[i-1][1],mx,my);
+    }
+    ctx.lineTo(cx+16, cy+26); ctx.lineTo(cx+18, cy-10);
+    ctx.fill(); ctx.stroke();
+    // small side flower accent
+    for(let p=0;p<4;p++){
+      const ang=p*Math.PI/2, fx=cx-24+Math.cos(ang)*3, fy=cy-28+Math.sin(ang)*3;
+      ctx.beginPath(); ctx.arc(fx,fy,2,0,Math.PI*2);
+      ctx.fillStyle='#fff'; ctx.fill(); ctx.strokeStyle='#111'; ctx.lineWidth=0.8; ctx.stroke();
+    }
+    ctx.beginPath(); ctx.arc(cx-24,cy-28,1.5,0,Math.PI*2); ctx.fillStyle='#111'; ctx.fill();
+
+  } else if(hair==='girl3'){
+    // Braids with top bun
+    ctx.beginPath(); ctx.ellipse(cx, cy-20, 18, 13, 0, Math.PI, 0); ctx.fill(); ctx.stroke();
+    // bun on top
+    ctx.beginPath(); ctx.arc(cx, cy-30, 7, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.save(); ctx.strokeStyle='#111'; ctx.lineWidth=0.9;
+    ctx.beginPath(); ctx.moveTo(cx-5,cy-30); ctx.lineTo(cx+5,cy-30); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx,cy-35); ctx.lineTo(cx,cy-25); ctx.stroke();
+    ctx.restore();
+    // left braid
+    for(let i=0;i<5;i++){
+      const by=cy-5+i*9;
+      ctx.beginPath(); ctx.ellipse(cx-18, by, 5, 4, 0.4, 0, Math.PI*2);
+      ctx.fillStyle=hCol; ctx.fill(); ctx.strokeStyle='#111'; ctx.lineWidth=1; ctx.stroke();
+    }
+    // right braid
+    for(let i=0;i<5;i++){
+      const by=cy-5+i*9;
+      ctx.beginPath(); ctx.ellipse(cx+18, by, 5, 4, -0.4, 0, Math.PI*2);
+      ctx.fillStyle=hCol; ctx.fill(); ctx.stroke();
+    }
+    // braid ends (small circles)
+    ctx.beginPath(); ctx.arc(cx-18,cy+42,5,0,Math.PI*2); ctx.fillStyle=hCol; ctx.fill(); ctx.strokeStyle='#111'; ctx.lineWidth=1.2; ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx+18,cy+42,5,0,Math.PI*2); ctx.fill(); ctx.stroke();
+
+  } else if(hair==='boy1'){
+    // Clean short cut
+    ctx.beginPath(); ctx.ellipse(cx, cy-18, 22, 14, 0, Math.PI, 0); ctx.fill(); ctx.stroke();
+    // side parts
+    ctx.beginPath(); ctx.ellipse(cx-20, cy-12, 6, 9, -0.2, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(cx+20, cy-12, 6, 9, 0.2, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    // clean straight hairline
+    ctx.save(); ctx.strokeStyle='#111'; ctx.lineWidth=1.2;
+    ctx.beginPath(); ctx.moveTo(cx-20,cy-8); ctx.quadraticCurveTo(cx,cy-6,cx+20,cy-8); ctx.stroke();
+    ctx.restore();
+
+  } else if(hair==='boy2'){
+    // Wavy/tousled boy
+    ctx.beginPath(); ctx.ellipse(cx, cy-18, 22, 14, 0, Math.PI, 0); ctx.fill(); ctx.stroke();
+    // tousled top waves
+    const tufts=[cx-14,cx-5,cx+4,cx+13];
+    tufts.forEach((tx,i)=>{
+      ctx.beginPath();
+      ctx.moveTo(tx-4, cy-26);
+      ctx.bezierCurveTo(tx-6,cy-34, tx+6,cy-36, tx+4,cy-26);
+      ctx.fill(); ctx.stroke();
+    });
+    // side volume
+    ctx.beginPath(); ctx.ellipse(cx-21,cy-12,6,9,-0.2,0,Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(cx+21,cy-12,6,9,0.2,0,Math.PI*2); ctx.fill(); ctx.stroke();
+
+  } else if(hair==='boy3'){
+    // Spiky anime
+    ctx.beginPath(); ctx.ellipse(cx, cy-18, 21, 13, 0, Math.PI, 0); ctx.fill(); ctx.stroke();
+    // spikes
+    const spikes=[{x:cx-14,h:14},{x:cx-6,h:18},{x:cx+1,h:20},{x:cx+8,h:16},{x:cx+16,h:12}];
+    spikes.forEach(s=>{
+      ctx.beginPath();
+      ctx.moveTo(s.x-5, cy-22);
+      ctx.lineTo(s.x, cy-22-s.h);
+      ctx.lineTo(s.x+5, cy-22);
+      ctx.fill(); ctx.stroke();
+    });
+    ctx.beginPath(); ctx.ellipse(cx-20,cy-12,5,8,-0.2,0,Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(cx+20,cy-12,5,8,0.2,0,Math.PI*2); ctx.fill(); ctx.stroke();
+  }
+  ctx.restore();
+
+  /* ════ 2. FACE (white filled circle with thick outline) ════ */
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx, cy, 24, 0, Math.PI*2);
+  ctx.fillStyle = '#ffffff';
+  ctx.shadowColor='rgba(0,0,0,0.12)'; ctx.shadowBlur=6; ctx.shadowOffsetY=3;
+  ctx.fill();
+  ctx.shadowBlur=0; ctx.shadowOffsetY=0;
+  ctx.strokeStyle='#111'; ctx.lineWidth=2.2; ctx.stroke();
+  ctx.restore();
+
+  /* ════ 3. EARS ════ */
+  ctx.save();
+  ctx.strokeStyle='#111'; ctx.lineWidth=1.8;
+  ctx.beginPath(); ctx.ellipse(cx-24, cy+2, 5, 7, 0, 0, Math.PI*2);
+  ctx.fillStyle='#fff'; ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(cx+24, cy+2, 5, 7, 0, 0, Math.PI*2);
+  ctx.fill(); ctx.stroke();
+  ctx.restore();
+
+  /* ════ 4. EYEBROWS ════ */
+  ctx.save(); ctx.strokeStyle='#111'; ctx.lineWidth=2; ctx.lineCap='round';
+  if(mood==='sad'){
+    // sad: inner-ends raised (upside-down V on inner side)
+    ctx.beginPath(); ctx.moveTo(cx-14,cy-11); ctx.quadraticCurveTo(cx-9,cy-7,cx-4,cy-12); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx+4,cy-12); ctx.quadraticCurveTo(cx+9,cy-7,cx+14,cy-11); ctx.stroke();
+  } else if(mood==='celebrate'){
+    // celebrate: raised arched
+    ctx.beginPath(); ctx.moveTo(cx-14,cy-15); ctx.quadraticCurveTo(cx-9,cy-19,cx-4,cy-15); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx+4,cy-15); ctx.quadraticCurveTo(cx+9,cy-19,cx+14,cy-15); ctx.stroke();
+  } else {
+    // happy: normal gentle arch
+    ctx.beginPath(); ctx.moveTo(cx-14,cy-13); ctx.quadraticCurveTo(cx-9,cy-17,cx-4,cy-13); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx+4,cy-13); ctx.quadraticCurveTo(cx+9,cy-17,cx+14,cy-13); ctx.stroke();
+  }
+  ctx.restore();
+
+  /* ════ 5. EYES ════ */
+  ctx.save();
+  if(mood==='sad'){
+    // Droopy half-closed eyes with teardrop
+    ctx.fillStyle='#111';
+    ctx.beginPath(); ctx.ellipse(cx-9,cy-4,5,4,0.3,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx+9,cy-4,5,4,-0.3,0,Math.PI*2); ctx.fill();
+    // white shine small
+    ctx.fillStyle='#fff';
+    ctx.beginPath(); ctx.arc(cx-11,cy-6,1.3,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx+7,cy-6,1.3,0,Math.PI*2); ctx.fill();
+    // teardrop left
+    ctx.fillStyle='rgba(150,210,255,0.85)';
+    ctx.beginPath(); ctx.moveTo(cx-9,cy+1); ctx.bezierCurveTo(cx-12,cy+5,cx-12,cy+9,cx-9,cy+9); ctx.bezierCurveTo(cx-6,cy+9,cx-6,cy+5,cx-9,cy+1); ctx.fill();
+  } else if(mood==='celebrate'){
+    // Big sparkle star eyes
+    ctx.fillStyle='#111';
+    drawChibiStar(ctx, cx-9, cy-4, 6);
+    drawChibiStar(ctx, cx+9, cy-4, 6);
+    ctx.fillStyle='#fff';
+    ctx.beginPath(); ctx.arc(cx-7,cy-6,1.5,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx+11,cy-6,1.5,0,Math.PI*2); ctx.fill();
+  } else {
+    // Happy: large round chibi eyes
+    ctx.fillStyle='#111';
+    ctx.beginPath(); ctx.arc(cx-9,cy-4,6,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx+9,cy-4,6,0,Math.PI*2); ctx.fill();
+    // inner highlight ring
+    ctx.fillStyle='#fff';
+    ctx.beginPath(); ctx.arc(cx-7,cy-6,2,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx+11,cy-6,2,0,Math.PI*2); ctx.fill();
+    // tiny second shine
+    ctx.beginPath(); ctx.arc(cx-11,cy-3,1,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(cx+7,cy-3,1,0,Math.PI*2); ctx.fill();
+  }
+  ctx.restore();
+
+  /* ════ 6. NOSE ════ */
+  ctx.save(); ctx.strokeStyle='rgba(0,0,0,0.2)'; ctx.lineWidth=1.3; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(cx-2,cy+3); ctx.quadraticCurveTo(cx,cy+6,cx+2,cy+3); ctx.stroke();
+  ctx.restore();
+
+  /* ════ 7. MOUTH ════ */
+  ctx.save(); ctx.strokeStyle='#111'; ctx.lineWidth=1.8; ctx.lineCap='round';
+  if(mood==='sad'){
+    // inverted smile
+    ctx.beginPath(); ctx.moveTo(cx-8,cy+13); ctx.quadraticCurveTo(cx,cy+9,cx+8,cy+13); ctx.stroke();
+    // small wobble line
+    ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(cx-3,cy+15); ctx.quadraticCurveTo(cx,cy+13,cx+3,cy+15); ctx.stroke();
+  } else if(mood==='celebrate'){
+    // big open happy mouth
+    ctx.beginPath(); ctx.moveTo(cx-10,cy+9); ctx.quadraticCurveTo(cx,cy+18,cx+10,cy+9); ctx.stroke();
+    // teeth fill
+    ctx.fillStyle='#fff';
+    ctx.beginPath(); ctx.moveTo(cx-9,cy+10); ctx.quadraticCurveTo(cx,cy+17,cx+9,cy+10); ctx.lineTo(cx+8,cy+10); ctx.quadraticCurveTo(cx,cy+15,cx-8,cy+10); ctx.fill();
+  } else {
+    // happy smile with W mouth
+    ctx.beginPath(); ctx.moveTo(cx-9,cy+9); ctx.quadraticCurveTo(cx,cy+17,cx+9,cy+9); ctx.stroke();
+    // cute bottom lip
+    ctx.lineWidth=1.2;
+    ctx.beginPath(); ctx.moveTo(cx-4,cy+15); ctx.quadraticCurveTo(cx,cy+17,cx+4,cy+15); ctx.stroke();
+  }
+  ctx.restore();
+
+  /* ════ 8. CHEEKS (light gray circles) ════ */
+  if(mood!=='sad'){
+    ctx.save();
+    ctx.fillStyle='rgba(0,0,0,0.06)';
+    ctx.beginPath(); ctx.ellipse(cx-16,cy+6,6,4,0,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx+16,cy+6,6,4,0,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+
+  /* ════ 9. MOOD EFFECTS ════ */
+  ctx.save();
+  if(mood==='celebrate'){
+    // sparkle lines around face
+    ctx.strokeStyle='#111'; ctx.lineWidth=1.3;
+    const sparks=[[cx+28,cy-20,cx+34,cy-26],[cx-28,cy-20,cx-34,cy-26],[cx+30,cy-8,cx+37,cy-6],[cx-30,cy-8,cx-37,cy-6]];
+    sparks.forEach(([x1,y1,x2,y2])=>{ ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); });
+    ctx.beginPath(); ctx.moveTo(cx+32,cy-20); ctx.lineTo(cx+35,cy-24); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx+32,cy-20); ctx.lineTo(cx+36,cy-18); ctx.stroke();
+  } else if(mood==='happy'){
+    // small motion lines
+    ctx.strokeStyle='rgba(0,0,0,0.2)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.arc(cx,cy,28,Math.PI*1.3,Math.PI*1.55); ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawChibiStar(ctx, x, y, r){
+  ctx.beginPath();
+  for(let i=0;i<5;i++){
+    const a = (i*4*Math.PI/5) - Math.PI/2;
+    const a2 = a + 2*Math.PI/5;
+    const ir = r*0.4;
+    if(i===0) ctx.moveTo(x+r*Math.cos(a), y+r*Math.sin(a));
+    else ctx.lineTo(x+r*Math.cos(a), y+r*Math.sin(a));
+    ctx.lineTo(x+ir*Math.cos(a2), y+ir*Math.sin(a2));
+  }
+  ctx.closePath(); ctx.fill();
+}
+
+function showBuddyMsg(type){
+  if(!buddyOn) return;
+  const bubble = document.getElementById('buddy-bubble');
+  if(!bubble) return;
+  const msgs = BUDDY_MSGS[type] || BUDDY_MSGS.idle;
+  const msg = msgs[Math.floor(Math.random()*msgs.length)];
+  bubble.textContent = msg;
+  bubble.style.display = 'block';
+  if(buddyBubbleTimer) clearTimeout(buddyBubbleTimer);
+  buddyBubbleTimer = setTimeout(()=>{ bubble.style.display='none'; }, 3500);
+}
+
+function updateBuddyMood(pct){
+  if(!buddyOn) return;
+  const prev = buddyMood;
+  if(pct===100){ buddyMood='celebrate'; }
+  else if(pct>=40){ buddyMood='happy'; }
+  else { buddyMood='sad'; }
+  drawBuddy(buddyMood);
+  if(buddyMood!==prev){
+    if(buddyMood==='celebrate') showBuddyMsg('celebrate');
+    else if(buddyMood==='sad') showBuddyMsg('sad');
+    else showBuddyMsg('happy');
+  }
+}
+
+function openBuddyPanel(){
+  buddyPanelOpen = true;
+  buildBuddyPanel();
+  document.getElementById('buddy-panel').classList.add('on');
+}
+
+function closeBuddyPanel(){
+  buddyPanelOpen = false;
+  document.getElementById('buddy-panel').classList.remove('on');
+}
+
+function buildBuddyPanel(){
+  const isAr = currentLang==='ar';
+  document.getElementById('bp-title-txt').textContent = isAr ? 'تخصيص الرفيق' : 'Customize Buddy';
+  document.getElementById('bp-skin-lbl').textContent = isAr ? 'لون الشعر' : 'Hair Color';
+  document.getElementById('bp-hair-lbl').textContent = isAr ? 'قصة الشعر' : 'Hairstyle';
+  document.getElementById('bp-close-btn').textContent = isAr ? 'إغلاق' : 'Close';
+  document.getElementById('buddy-btn-lbl').textContent = isAr ? 'رفيق' : 'Buddy';
+
+  // Hair colors
+  document.getElementById('bp-skins').innerHTML = BUDDY_SKINS.map(s=>
+    `<div class="bp-skin${buddyConfig.hairColor===s?' active':''}" style="background:${s};border:2px solid #888;" onclick="setBuddySkin('${s}')"></div>`
+  ).join('');
+
+  // Hairs
+  document.getElementById('bp-hairs').innerHTML = BUDDY_HAIRS.map(h=>
+    `<div class="bp-hair${buddyConfig.hair===h.id?' active':''}" onclick="setBuddyHair('${h.id}')">${h.label}</div>`
+  ).join('');
+}
+
+function setBuddySkin(s){
+  buddyConfig.hairColor=s; saveBuddyConfig(); drawBuddy(buddyMood); buildBuddyPanel();
+}
+function setBuddyHair(h){
+  buddyConfig.hair=h; saveBuddyConfig(); drawBuddy(buddyMood); buildBuddyPanel();
+}
+
+// updateScore is redefined below to include buddy mood tracking
+function updateScore(){
+  const wk=wkKey(htOff); let tot=0,dn=0;
+  habits.forEach(h=>h.days.forEach(di=>{ tot++; if(comp[`${h.id}_${wk}_${di}`]) dn++; }));
+  const pct=tot?Math.round(dn/tot*100):0;
+  const emoji=pct===100?'🏆':pct>=75?'🔥':pct>=50?'💪':pct>=25?'🌱':'✨';
+  document.getElementById('htScore').innerHTML=
+    `<div class="big">${dn}<span style="font-size:1rem;color:var(--mut)">/${tot}</span> ${emoji}</div>
+     <div class="lbl">${T().tasksComplete} • ${pct}%</div>
+     <div class="sbar-w"><div class="sbar" style="width:${pct}%"></div></div>`;
+  updateBuddyMood(pct);
+}
+
+// Buddy idle random messages
+setInterval(()=>{
+  if(buddyOn && buddyMood==='happy' && !buddyPanelOpen){
+    if(Math.random()<0.3) showBuddyMsg('idle');
+  }
+}, 15000);
 </script>
+
+<!-- ─── COMPANION CHARACTER ─── -->
+<div id="buddy-wrap">
+  <div id="buddy-bubble" style="display:none"></div>
+  <div id="buddy-head" onclick="openBuddyPanel()">
+    <canvas id="buddy-face" width="80" height="80"></canvas>
+  </div>
+</div>
+
+<!-- ─── COMPANION CUSTOMIZER ─── -->
+<div id="buddy-panel">
+  <div class="bp-title">🎨 <span id="bp-title-txt">تخصيص الرفيق</span></div>
+  <div class="bp-row">
+    <div class="bp-lbl" id="bp-skin-lbl">لون البشرة</div>
+    <div class="bp-skins" id="bp-skins"></div>
+  </div>
+  <div class="bp-row">
+    <div class="bp-lbl" id="bp-hair-lbl">قصة الشعر</div>
+    <div class="bp-hairs" id="bp-hairs"></div>
+  </div>
+  <button class="btn bs" style="width:100%;margin-top:6px;font-family:'Tajawal',sans-serif" onclick="closeBuddyPanel()" id="bp-close-btn">إغلاق</button>
+</div>
+
 </body>
 </html>
