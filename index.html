@@ -2,10 +2,62 @@
 <html lang="ar" dir="rtl" data-lang="ar">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>مخططي الأسبوعي | My Weekly Planner</title>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="./manifest.json">
+
+<!-- PWA Meta Tags -->
+<meta name="theme-color" content="#1565c0" id="theme-color-meta">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="مخططي">
+<meta name="application-name" content="مخططي">
+<meta name="msapplication-TileColor" content="#1565c0">
+<meta name="msapplication-TileImage" content="./icons/icon-144.png">
+
+<!-- PWA Icons -->
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="152x152" href="./icons/icon-152.png">
+<link rel="apple-touch-icon" sizes="144x144" href="./icons/icon-144.png">
+<link rel="apple-touch-icon" sizes="128x128" href="./icons/icon-128.png">
+
+<!-- SEO -->
+<meta name="description" content="مخطط أسبوعي ذكي مع تتبع العادات واليوميات والإحصائيات والتذكيرات">
+<meta name="keywords" content="مخطط, عادات, جدول, productivity, planner, habits">
+
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+/* ── PWA Install Banner ── */
+#pwa-banner{
+  display:none;position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
+  background:var(--sur,rgba(255,255,255,.95));border:1.5px solid var(--bdr);
+  border-radius:18px;padding:14px 18px;box-shadow:0 8px 32px rgba(0,0,0,.2);
+  z-index:9999;align-items:center;gap:12px;max-width:360px;width:calc(100% - 32px);
+  animation:slideUp .3s ease;backdrop-filter:blur(10px);
+}
+#pwa-banner.show{display:flex;}
+#pwa-banner img{width:42px;height:42px;border-radius:10px;flex-shrink:0;}
+#pwa-banner .pwa-txt{flex:1;min-width:0;}
+#pwa-banner .pwa-title{font-size:.85rem;font-weight:800;color:var(--txt);}
+#pwa-banner .pwa-sub{font-size:.72rem;color:var(--mut);margin-top:2px;}
+#pwa-banner .pwa-btns{display:flex;gap:6px;flex-shrink:0;}
+#pwa-banner .pwa-install{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:7px 14px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:'Tajawal',sans-serif;white-space:nowrap;}
+#pwa-banner .pwa-dismiss{background:none;border:1.5px solid var(--bdr);border-radius:10px;padding:7px 10px;font-size:.78rem;cursor:pointer;color:var(--mut);font-family:'Tajawal',sans-serif;}
+@keyframes slideUp{from{transform:translateX(-50%) translateY(20px);opacity:0;}to{transform:translateX(-50%) translateY(0);opacity:1;}}
+
+/* ── Offline indicator ── */
+#offline-bar{display:none;position:fixed;top:0;left:0;right:0;background:#e53935;color:#fff;text-align:center;font-size:.75rem;font-weight:700;padding:6px;z-index:10000;font-family:'Tajawal',sans-serif;}
+#offline-bar.show{display:block;}
+
+/* ── Safe area for mobile notch ── */
+body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);}
+.topbar{padding-top:max(env(safe-area-inset-top),0px);}
+
 :root {
   --acc:#1565c0; --acc2:#0097a7; --acc3:#7c3aed;
   --txt:#0d1b2a; --mut:#4a6080; --bdr:rgba(150,195,230,0.4);
@@ -4859,5 +4911,161 @@ initNotifications = function(){
   <button class="btn bs" style="width:100%;margin-top:6px;font-family:'Tajawal',sans-serif" onclick="closeBuddyPanel()" id="bp-close-btn">إغلاق</button>
 </div>
 
+<!-- ── Offline Bar ── -->
+<div id="offline-bar">📵 أنت غير متصل بالإنترنت — التطبيق يعمل بالبيانات المحفوظة</div>
+
+<!-- ── PWA Install Banner ── -->
+<div id="pwa-banner">
+  <img src="./icons/icon-192.png" alt="icon" onerror="this.style.display='none'">
+  <div class="pwa-txt">
+    <div class="pwa-title" id="pwa-title">ثبّت التطبيق على جهازك</div>
+    <div class="pwa-sub"   id="pwa-sub">استخدمه بدون متصفح، حتى بدون إنترنت</div>
+  </div>
+  <div class="pwa-btns">
+    <button class="pwa-install"  id="pwa-install-btn"  onclick="pwaInstall()">تثبيت</button>
+    <button class="pwa-dismiss"  onclick="pwaDismiss()">✕</button>
+  </div>
+</div>
+
+<!-- ── PWA + Service Worker ── -->
+<script>
+/* ════════════════════════════════════════
+   PWA — Service Worker + Install Prompt
+════════════════════════════════════════ */
+
+let _deferredPrompt = null;
+
+/* ─ Register Service Worker ─ */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => {
+        console.log('✅ SW registered:', reg.scope);
+        // Check for updates every 60s
+        setInterval(() => reg.update(), 60000);
+      })
+      .catch(err => console.warn('SW registration failed:', err));
+  });
+}
+
+/* ─ Capture install prompt ─ */
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _deferredPrompt = e;
+  // Only show banner if not dismissed recently
+  const dismissed = localStorage.getItem('pwaDismissed');
+  const dayAgo    = Date.now() - 1000 * 60 * 60 * 24 * 3; // 3 days
+  if (!dismissed || parseInt(dismissed) < dayAgo) {
+    setTimeout(showPwaBanner, 3000); // show after 3s
+  }
+});
+
+/* ─ Detect iOS (no beforeinstallprompt) ─ */
+function isIos() {
+  return /iphone|ipad|ipod/i.test(navigator.userAgent);
+}
+function isInStandaloneMode() {
+  return window.matchMedia('(display-mode: standalone)').matches ||
+         window.navigator.standalone === true;
+}
+
+window.addEventListener('load', () => {
+  if (isIos() && !isInStandaloneMode()) {
+    const dismissed = localStorage.getItem('pwaDismissed');
+    const dayAgo    = Date.now() - 1000 * 60 * 60 * 24 * 3;
+    if (!dismissed || parseInt(dismissed) < dayAgo) {
+      setTimeout(showIosBanner, 3000);
+    }
+  }
+});
+
+function showPwaBanner() {
+  const banner = document.getElementById('pwa-banner');
+  if (banner) banner.classList.add('show');
+  updatePwaBannerLang();
+}
+
+function showIosBanner() {
+  const isAr  = (localStorage.getItem('wplanner_lang') || 'ar') === 'ar';
+  const title = document.getElementById('pwa-title');
+  const sub   = document.getElementById('pwa-sub');
+  const btn   = document.getElementById('pwa-install-btn');
+  if (title) title.textContent = isAr ? 'ثبّت على iPhone' : 'Install on iPhone';
+  if (sub)   sub.textContent   = isAr
+    ? 'اضغط 🔗 ثم "إضافة إلى الشاشة الرئيسية"'
+    : 'Tap 🔗 then "Add to Home Screen"';
+  if (btn)   btn.style.display = 'none'; // iOS can't trigger install programmatically
+  const banner = document.getElementById('pwa-banner');
+  if (banner)  banner.classList.add('show');
+}
+
+function updatePwaBannerLang() {
+  const isAr  = (localStorage.getItem('wplanner_lang') || 'ar') === 'ar';
+  const title = document.getElementById('pwa-title');
+  const sub   = document.getElementById('pwa-sub');
+  const btn   = document.getElementById('pwa-install-btn');
+  if (title) title.textContent = isAr ? 'ثبّت التطبيق على جهازك'     : 'Install App on Your Device';
+  if (sub)   sub.textContent   = isAr ? 'استخدمه بدون متصفح، حتى بدون إنترنت' : 'Use without browser, even offline';
+  if (btn)   btn.textContent   = isAr ? 'تثبيت' : 'Install';
+}
+
+async function pwaInstall() {
+  if (!_deferredPrompt) return;
+  _deferredPrompt.prompt();
+  const { outcome } = await _deferredPrompt.userChoice;
+  _deferredPrompt = null;
+  pwaDismiss();
+  if (outcome === 'accepted') {
+    // Show success message
+    const isAr = (localStorage.getItem('wplanner_lang') || 'ar') === 'ar';
+    setTimeout(() => alert(isAr ? '🎉 تم تثبيت التطبيق بنجاح!' : '🎉 App installed successfully!'), 500);
+  }
+}
+
+function pwaDismiss() {
+  const banner = document.getElementById('pwa-banner');
+  if (banner) banner.classList.remove('show');
+  localStorage.setItem('pwaDismissed', Date.now().toString());
+}
+
+/* ─ Detect going offline/online ─ */
+const offlineBar = document.getElementById('offline-bar');
+
+function updateOnlineStatus() {
+  const isAr    = (localStorage.getItem('wplanner_lang') || 'ar') === 'ar';
+  const offline = !navigator.onLine;
+  if (offlineBar) {
+    offlineBar.classList.toggle('show', offline);
+    offlineBar.textContent = isAr
+      ? '📵 أنت غير متصل — التطبيق يعمل بالبيانات المحفوظة'
+      : '📵 You are offline — App running on cached data';
+  }
+}
+
+window.addEventListener('online',  updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+updateOnlineStatus(); // check on load
+
+/* ─ Update theme-color meta when theme changes ─ */
+function updatePwaThemeColor() {
+  const meta  = document.getElementById('theme-color-meta');
+  const dark  = document.documentElement.getAttribute('data-theme') === 'dark';
+  if (meta) meta.content = dark ? '#0d1b2a' : '#1565c0';
+}
+
+// Hook into theme toggle
+const _origToggleTheme = typeof toggleTheme !== 'undefined' ? toggleTheme : null;
+if (_origToggleTheme) {
+  window._pwaThemeHooked = true;
+  const __origToggle = toggleTheme;
+  toggleTheme = function() {
+    __origToggle();
+    setTimeout(updatePwaThemeColor, 100);
+  };
+}
+
+// Init on load
+document.addEventListener('DOMContentLoaded', updatePwaThemeColor);
+</script>
 </body>
 </html>
