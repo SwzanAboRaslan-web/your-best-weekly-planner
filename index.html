@@ -187,6 +187,21 @@ body { font-family:'Tajawal',sans-serif; min-height:100vh; color:var(--txt); ove
 .sh h2 { font-size:1.45rem; font-weight:800; color:var(--txt); margin-bottom:4px; }
 .sh p { color:var(--mut); font-size:.75rem; background:var(--sur2); display:inline-block; padding:3px 14px; border-radius:20px; backdrop-filter:blur(4px); }
 
+/* ─── WEEK NAVIGATION ─── */
+.week-nav { display:flex; align-items:center; justify-content:space-between; max-width:1120px; margin:0 auto 10px; background:var(--card-bg); border:1px solid var(--bdr); border-radius:14px; padding:8px 14px; backdrop-filter:blur(8px); gap:10px; }
+.wn-btn { background:var(--sur2); border:1.5px solid var(--bdr); border-radius:10px; width:36px; height:36px; font-size:1.3rem; cursor:pointer; color:var(--acc); display:flex; align-items:center; justify-content:center; transition:all .18s; flex-shrink:0; line-height:1; }
+.wn-btn:hover { background:var(--acc); color:#fff; border-color:var(--acc); }
+.wn-center { flex:1; text-align:center; display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; }
+.wn-lbl { font-size:.82rem; font-weight:700; color:var(--txt); }
+.wn-today { background:var(--acc); color:#fff; border:none; border-radius:20px; padding:4px 12px; font-size:.72rem; font-weight:700; cursor:pointer; font-family:'Tajawal',sans-serif; transition:opacity .18s; }
+.wn-today:hover { opacity:.85; }
+@media(max-width:600px) {
+  .week-nav { padding:6px 10px; border-radius:10px; margin-bottom:7px; }
+  .wn-btn { width:30px; height:30px; font-size:1.1rem; border-radius:8px; }
+  .wn-lbl { font-size:.74rem; }
+  .wn-today { font-size:.66rem; padding:3px 9px; }
+}
+
 /* ─── WEEKLY CALENDAR ─── */
 .legend { display:flex; flex-wrap:wrap; gap:7px; justify-content:center; max-width:980px; margin:0 auto 14px; padding:10px 14px; background:var(--card-bg); border-radius:14px; border:1px solid var(--bdr); backdrop-filter:blur(8px); }
 .li { display:flex; align-items:center; gap:5px; font-size:.72rem; color:var(--txt); font-weight:500; }
@@ -196,6 +211,12 @@ body { font-family:'Tajawal',sans-serif; min-height:100vh; color:var(--txt); ove
 .dh { background:var(--card-bg); border:1px solid var(--bdr); border-radius:10px; padding:9px 3px; text-align:center; font-weight:700; font-size:.77rem; color:var(--acc); position:sticky; top:0; z-index:10; backdrop-filter:blur(10px); }
 .dh span { display:block; font-size:.59rem; color:var(--mut); font-weight:400; margin-top:2px; }
 .tl { height:80px; display:flex; align-items:center; justify-content:center; font-size:.59rem; color:var(--mut); background:var(--sur2); border:1px solid var(--bdr); border-radius:6px; font-weight:700; }
+/* Corner + time column: sticky on all screen sizes */
+.tl-corner {
+  position:sticky; left:0; z-index:20;
+  background:var(--sur2);
+  border:1px solid var(--bdr);
+}
 .sl { height:80px; background:rgba(255,255,255,.25); border:1px solid var(--bdr); border-radius:6px; position:relative; cursor:pointer; transition:background .18s; }
 [data-theme="dark"] .sl { background:rgba(255,255,255,.05); }
 .sl:hover { background:rgba(255,255,255,.5); }
@@ -364,21 +385,50 @@ body { font-family:'Tajawal',sans-serif; min-height:100vh; color:var(--txt); ove
 ════════════════════════════════════════════ */
 @media(max-width:600px) {
 
-  /* ── Topbar: wrap buttons tighter ── */
-  .topbar { padding:6px 8px; gap:4px; }
-  .topbar-left { gap:6px; }
-  .app-title { font-size:.85rem; }
-  .user-chip { max-width:100px; font-size:.65rem; padding:3px 8px; }
-  .icon-btn { padding:5px 7px; font-size:.72rem; }
+  /* ── Topbar: 2 clean rows ── */
+  .topbar {
+    padding:6px 10px;
+    gap:0;
+    flex-direction:column;
+    align-items:stretch;
+  }
+  .topbar-left {
+    display:flex; align-items:center; gap:8px;
+    padding-bottom:6px;
+    border-bottom:1px solid var(--topbar-bdr,rgba(255,255,255,0.15));
+    margin-bottom:5px;
+  }
+  .app-title { font-size:.88rem; }
+  .user-chip { max-width:120px; font-size:.66rem; padding:3px 9px; }
+  #sync-dot { margin-right:auto; }
+
+  /* Row 2: all buttons scrollable */
+  .topbar-right {
+    display:flex; align-items:center;
+    gap:5px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding:2px 0;
+    flex-wrap:nowrap;
+  }
+  .topbar-right::-webkit-scrollbar { display:none; }
+  .icon-btn {
+    padding:5px 8px;
+    font-size:.74rem;
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+  /* Hide text labels on sound/bg buttons — keep emoji only */
   .icon-btn span[data-i="sound"],
-  .icon-btn span[data-i="bg"] { display:none; } /* hide text labels, keep emoji */
-  .theme-toggle { width:44px; height:24px; }
-  .theme-toggle .tt-thumb { width:18px; height:18px; font-size:11px; }
-  .theme-toggle.dark .tt-thumb { transform:translateX(20px); }
+  .icon-btn span[data-i="bg"] { display:none; }
+  .theme-toggle { width:46px; height:26px; flex-shrink:0; }
+  .theme-toggle .tt-thumb { width:20px; height:20px; font-size:11px; }
+  .theme-toggle.dark .tt-thumb { transform:translateX(22px); }
 
   /* ── Tabs: scrollable row ── */
   .tabs {
-    padding:8px 8px 0;
+    padding:6px 8px 0;
     gap:5px;
     flex-wrap:nowrap;
     overflow-x:auto;
@@ -389,28 +439,55 @@ body { font-family:'Tajawal',sans-serif; min-height:100vh; color:var(--txt); ove
   .tabs::-webkit-scrollbar { display:none; }
   .tab { padding:6px 12px; font-size:.74rem; white-space:nowrap; flex-shrink:0; }
 
-  /* ── Pages padding ── */
+  /* ── Pages padding (account for taller topbar) ── */
   .page { padding:10px 8px 100px; }
-  .sh h2 { font-size:1.15rem; }
+  .sh h2 { font-size:1.1rem; }
 
-  /* ── Weekly Calendar: scrollable, more compact ── */
+  /* ── Weekly Calendar ── */
   .cw {
-    max-height:calc(100vh - 200px);
+    overflow-x:auto;
+    overflow-y:auto;
+    max-height:calc(100vh - 240px);
     border-radius:10px;
-    /* hint scrollable */
     -webkit-overflow-scrolling:touch;
+    /* remove border-radius so sticky works cleanly */
+    position:relative;
   }
+
+  /* Grid: time col fixed width, days fill remaining */
   .cal {
-    grid-template-columns:38px repeat(7,1fr);
-    min-width:480px;
+    display:grid;
+    grid-template-columns:42px repeat(7, minmax(52px, 1fr));
+    min-width:0;   /* allow shrinking — scroll handles the rest */
     gap:1px;
+    width:max-content; /* let it grow naturally */
   }
-  .dh { font-size:.58rem; padding:6px 2px; border-radius:7px; }
+
+  /* ⭐ TIME COLUMN: sticky to left while scrolling horizontally ── */
+  .tl {
+    position:sticky;
+    left:0;
+    z-index:15;
+    background:var(--sur2);
+    height:64px;
+    font-size:.52rem;
+    border-radius:0;
+    border:1px solid var(--bdr);
+  }
+  /* First cell (empty corner) also sticky */
+  .dh:first-child {
+    position:sticky;
+    left:0;
+    z-index:20;
+    background:var(--card-bg);
+    backdrop-filter:blur(12px);
+  }
+
+  .dh { font-size:.58rem; padding:6px 2px; border-radius:0; }
   .dh span { font-size:.50rem; margin-top:1px; }
-  .tl { height:64px; font-size:.52rem; border-radius:4px; }
-  .sl { height:64px; border-radius:4px; }
+  .sl { height:64px; border-radius:0; }
   .ev { font-size:.55rem; padding:3px 4px; border-radius:5px; }
-  .ev .em { display:none; } /* hide subtitle on mobile */
+  .ev .em { display:none; }
   .legend { padding:7px 10px; gap:5px; border-radius:10px; }
   .li { font-size:.65rem; }
 
@@ -497,7 +574,7 @@ body { font-family:'Tajawal',sans-serif; min-height:100vh; color:var(--txt); ove
    📱 RESPONSIVE — SMALL  (max 380px)
 ════════════════════════════════════════════ */
 @media(max-width:380px) {
-  .cal { min-width:400px; grid-template-columns:32px repeat(7,1fr); }
+  .cal { grid-template-columns:36px repeat(7, minmax(44px,1fr)); }
   .dh { font-size:.52rem; }
   .tl { height:56px; font-size:.48rem; }
   .sl { height:56px; }
@@ -967,6 +1044,15 @@ onAuthStateChanged(auth, user => {
     <h2>☀️ <span data-i="weeklyTitle">جدولي الأسبوعي</span></h2>
     <p data-i="weeklyHint">اضغط على خلية لإضافة نشاط • اضغط النشاط لتعديله</p>
   </div>
+  <!-- 🗓 Week Navigation -->
+  <div class="week-nav" id="week-nav">
+    <button class="wn-btn" onclick="changeWk(-1)" title="الأسبوع السابق">&#8249;</button>
+    <div class="wn-center">
+      <span class="wn-lbl" id="wn-lbl">الأسبوع الحالي</span>
+      <button class="wn-today" id="wn-today-btn" onclick="goToday()" style="display:none">↩ اليوم</button>
+    </div>
+    <button class="wn-btn" onclick="changeWk(1)" title="الأسبوع التالي">&#8250;</button>
+  </div>
   <!-- 📌 Pinned Note -->
   <div class="pin-note-bar" id="pin-note-bar">
     <span>📌</span>
@@ -1246,6 +1332,7 @@ const LANG = {
     journalTitle:'يومياتي', journalHint:'سجّل أفكارك ومشاعرك يومياً',
     statsTitle:'إحصائياتي', statsHint:'نظرة شاملة على أسبوعك',
     weeklyReport:'تقرير الأسبوع', pinNotePlaceholder:'📌 اكتب ملاحظة مثبتة للأسبوع...',
+    wkCurrent:'الأسبوع الحالي', wkLast:'الأسبوع الماضي', wkNext:'الأسبوع القادم', wkGoToday:'↩ اليوم',
     searchPlaceholder:'🔍 ابحث في الأنشطة والعادات والذكريات...',
     days:['السبت','الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'],
     daysEn:['Sat','Sun','Mon','Tue','Wed','Thu','Fri'],
@@ -1315,6 +1402,7 @@ const LANG = {
     journalTitle:'My Journal', journalHint:'Record your thoughts and feelings daily',
     statsTitle:'My Stats', statsHint:'A comprehensive view of your week',
     weeklyReport:'Weekly Report', pinNotePlaceholder:'📌 Write a pinned note for the week...',
+    wkCurrent:'Current Week', wkLast:'Last Week', wkNext:'Next Week', wkGoToday:'↩ Today',
     searchPlaceholder:'🔍 Search events, habits, memories...',
     days:['Sat','Sun','Mon','Tue','Wed','Thu','Fri'],
     daysEn:['Sat','Sun','Mon','Tue','Wed','Thu','Fri'],
@@ -2525,8 +2613,45 @@ function updateTimeFmtLabel(){
   if(lbl) lbl.textContent = timeFormat==='24' ? T().timeFmtToggle : T().timeFmtToggle24;
 }
 
+/* ── Week offset (0 = current week) ── */
+let wkOff = 0;
+
+function changeWk(dir){
+  wkOff += dir;
+  renderW();
+  updateWkNav();
+}
+
+function goToday(){
+  wkOff = 0;
+  renderW();
+  updateWkNav();
+}
+
+function updateWkNav(){
+  const isAr = currentLang === 'ar';
+  const lbl     = document.getElementById('wn-lbl');
+  const btn     = document.getElementById('wn-today-btn');
+  const prevBtn = document.querySelector('#week-nav .wn-btn:first-child');
+  const nextBtn = document.querySelector('#week-nav .wn-btn:last-child');
+  if(lbl){
+    if(wkOff === 0)       lbl.textContent = T().wkCurrent;
+    else if(wkOff === -1) lbl.textContent = T().wkLast;
+    else if(wkOff === 1)  lbl.textContent = T().wkNext;
+    else                  lbl.textContent = wkLbl(wkOff);
+  }
+  if(btn){
+    btn.textContent    = T().wkGoToday;
+    btn.style.display  = wkOff !== 0 ? 'inline-block' : 'none';
+  }
+  // RTL: prev=right arrow, next=left arrow
+  if(prevBtn) prevBtn.innerHTML = isAr ? '&#8250;' : '&#8249;';
+  if(nextBtn) nextBtn.innerHTML = isAr ? '&#8249;' : '&#8250;';
+}
+
 function renderW(){
   renderLeg(); renderCal(); renderSum();
+  updateWkNav();
 }
 
 function renderLeg(){
@@ -2548,14 +2673,15 @@ function renderCal(){
   const days=T().days; const daysEn=T().daysEn;
   const HRS=[]; for(let h=0;h<24;h++) HRS.push(h);
 
-  // Today's day index (0=Sat,1=Sun,...,6=Fri)
-  const todayJs=new Date().getDay(); // 0=Sun..6=Sat
-  const todayDi=[1,2,3,4,5,6,0][todayJs];
+  // Today's day index (0=Sat,1=Sun,...,6=Fri) — only highlight if viewing current week
+  const todayJs=new Date().getDay();
+  const todayDi = wkOff===0 ? [1,2,3,4,5,6,0][todayJs] : -1;
   const nowMin=new Date().getHours()*60+new Date().getMinutes();
 
   // corner cell
   const co=document.createElement('div');
-  co.style.cssText='background:var(--sur2);border:1px solid var(--bdr);border-radius:10px;';
+  co.className='tl-corner';
+  co.style.cssText='background:var(--sur2);border:1px solid var(--bdr);border-radius:10px 0 0 0;';
   c.appendChild(co);
   days.forEach((d,i)=>{
     const h=document.createElement('div');
@@ -2569,8 +2695,8 @@ function renderCal(){
     days.forEach((_,di)=>{
       const sl=document.createElement('div'); sl.className='sl'+(di===todayDi?' today':'');
       sl.onclick=e=>{ if(e.target===sl) openEv(di,`${String(hr).padStart(2,'0')}:00`); };
-      // Add red time line to today's column at current hour
-      if(di===todayDi && hr===new Date().getHours()){
+      // Add red time line to today's column at current hour (only current week)
+      if(wkOff===0 && di===todayDi && hr===new Date().getHours()){
         const line=document.createElement('div'); line.className='time-now-line';
         line.style.top=`${(new Date().getMinutes()/60)*SH}px`;
         sl.appendChild(line);
@@ -2578,6 +2704,9 @@ function renderCal(){
       c.appendChild(sl);
     });
   });
+
+  // ── Filter events for viewed week ──
+  const wk = wkKey(wkOff);
 
   // ── Render events with Google Calendar-style overlap columns ──
   const slots=document.querySelectorAll('.sl');
@@ -4511,6 +4640,7 @@ updateAllI18n = function(){
   const si = document.getElementById('search-inp'); if(si) si.placeholder=isAr?'🔍 ابحث في الأنشطة والعادات والذكريات...':'🔍 Search events, habits, memories...';
   const pn = document.getElementById('pin-note-txt'); if(pn && !pn.value) pn.placeholder=isAr?'📌 اكتب ملاحظة مثبتة للأسبوع...':'📌 Write a pinned note for the week...';
   const rl2= document.getElementById('open-report-lbl'); if(rl2) rl2.textContent=isAr?'تقرير الأسبوع':'Weekly Report';
+  updateWkNav();
 };
 
 /* ── renderHT extension: refresh goals+rewards ── */
@@ -4922,6 +5052,7 @@ initNotifications = function(){
   _origLaunchInit();
   initPinNote();
   loadTabColors();
+  updateWkNav();
   checkMorningBrief();
   checkWeeklyReport();
 };
