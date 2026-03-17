@@ -1,6 +1,6 @@
 # 🗓️ My Weekly Planner — مخططي الأسبوعي
 
-> **The most beautiful weekly planner — everywhere you go, on every device.** > أجمل مخطط أسبوعي — في كل مكان، على كل جهاز.
+> **your best weekly planner between your hands — everywhere you go, on every device.** >  مخططك الأسبوعي المفضل بين يديك — في كل مكان، على كل جهاز.
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-success?style=for-the-badge&logo=vercel)](https://swzanaboraslan-web.github.io/your-best-weekly-planner/)
 [![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)]()
