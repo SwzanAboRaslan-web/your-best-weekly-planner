@@ -1,109 +1,57 @@
-# 🗓️ مخططي الأسبوعي — My Weekly Planner
+# 🗓️ My Weekly Planner — مخططي الأسبوعي
 
-> أجمل مخطط أسبوعي — في كل مكان، على كل جهاز.  
-> The most beautiful weekly planner — everywhere you go, on every device.
+> **The most beautiful weekly planner — everywhere you go, on every device.** > أجمل مخطط أسبوعي — في كل مكان، على كل جهاز.
+
+[![Live Demo](https://img.shields.io/badge/Live-Demo-success?style=for-the-badge&logo=vercel)](https://swzanaboraslan-web.github.io/your-best-weekly-planner/)
+[![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)]()
+[![PWA Ready](https://img.shields.io/badge/PWA-Ready-blueviolet?style=for-the-badge&logo=pwa)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)]()
 
 ## 🌐 Live Demo
-👉 [Open the App](https://swzanaboraslan-web.github.io/your-best-weekly-planner/)
+👉 **[Open the App Here](https://swzanaboraslan-web.github.io/your-best-weekly-planner/)**
 
 ---
 
 ## ✨ Features
 
 ### 📅 Planning & Scheduling
-- 📅 **Weekly Schedule** — tap any cell to add an activity with type, color, start & end time
-- 🔁 **Recurring Events** — mark any activity to repeat weekly on selected days automatically
-- 🗓️ **Annual Overview** — monthly progress tracking with star ratings per week
-- 📤 **Google Calendar Export** — export your schedule as an `.ics` file
-- 📊 **Overlap Layout** — overlapping events display side-by-side (Google Calendar style)
+- **Weekly Schedule**: Tap any cell to add an activity with custom types, colors, and start/end times.
+- **Recurring Events**: Mark any activity to repeat automatically on selected days.
+- **Annual Overview**: Monthly progress tracking with star ratings per week.
+- **Google Calendar Export**: Export your schedule instantly as an `.ics` file.
+- **Overlap Layout**: Overlapping events automatically display side-by-side.
 
 ### ⭐ Habits & Goals
-- ⭐ **Habit Tracker** — create habits with per-day start & end times
-- 📅 **Calendar Sync** — habits with times appear automatically in the weekly schedule
-- 🎯 **Weekly Goals** — set measurable goals linked to habits with progress bars
-- 📊 **Weekly Progress** — score, percentage, completion bar & streaks per habit
-- 💡 **Habit Suggestions** — 28+ popular habits to add with one tap
+- **Habit Tracker**: Create habits with specific start & end times.
+- **Calendar Sync**: Timed habits automatically appear in your weekly schedule.
+- **Weekly Goals & Progress**: Set measurable goals. Track your score, percentage, completion bar, and streaks.
+- **Smart Suggestions**: Add from a list of 28+ popular habits with one tap.
 
-### 📊 Stats & Reports
-- 📊 **Stats Page** — hours by day chart, time by activity type, points summary
-- 📋 **Weekly Report** — auto-popup every Saturday with full week summary (habits %, top type, Pomodoro sessions, points)
+### 🍅 Productivity & Stats
+- **Built-in Pomodoro**: 25m focus / 5m short break / 15m long break with an animated SVG progress ring.
+- **Completion Alerts**: Browser notifications & buddy celebrations when a session ends.
+- **Stats Page**: Visual charts showing hours by day, time by activity type, and points summary.
+- **Weekly Report**: Auto-popup every Saturday summarizing your week (habits %, top type, Pomodoros, points).
 
-### 🍅 Pomodoro Timer
-- 🍅 **Built-in Pomodoro** — 25 min focus / 5 min short break / 15 min long break
-- ⭕ **Animated ring** — SVG progress circle updates in real time
-- 🔔 **Completion notification** — browser notification + buddy celebration when session ends
-- 🧮 **Session counter** — tracks daily Pomodoro sessions (contributes to points)
+### 📝 Journal & Memories
+- **Daily Journal**: Log daily entries with date navigation and a **Mood Tracker** (happy/neutral/sad/stressed/excited/tired).
+- **Memory Journal**: Log special moments with dates, titles, descriptions, and photo attachments.
+- **Built-in Drawing Canvas**: Sketch directly within your memories using customizable brush sizes and erasers.
+- **Universal Search**: Search across events, habits, and memories simultaneously.
 
-### 🏅 Points & Achievements
-- ⭐ **Points System** — earned from habits (10 pts), journal entries (3 pts), Pomodoro (15 pts), completed goals (20 pts), annual stars (5 pts)
-- 🏅 **10 Achievement Badges** — Beginner → Legend, unlocked progressively by points
-- 🎨 **Visual reward cards** — greyed out until earned, highlighted in gold when unlocked
+### 🔔 Reminders & Customization
+- **Smart Reminders**: Set custom, habit-linked, event-linked, or daily fixed reminders.
+- **Companion Character (Buddy)**: A customizable, mood-reactive floating buddy that encourages you based on habit completion.
+- **Personalization**: 12 Animated Backgrounds (sky, sunset, rain, forest, etc.) and custom tab colors.
+- **Ambient Sounds**: Built-in focus sounds (rain, waves, fire, wind, piano, lo-fi).
+- **Dark/Light Mode**: Smooth toggle with an animated sun & moon.
 
-### 🔔 Reminders & Notifications
-- 🔔 **Custom Reminders** — any message with time & selected days
-- ⭐ **Habit Reminders** — linked to a specific habit
-- 📅 **Event Reminders** — linked to a calendar event
-- 🌅 **Daily Fixed Reminders** — same time every day
-- 🔕 **Toggle on/off** per reminder without deleting
-- 🔴 **Badge counter** on the bell icon
-
-### 🌤️ Morning Brief
-- ☀️ **Daily Summary Popup** — appears once per day on first open
-- Shows: today's events, habits count, week progress %, journal streak
-- 💬 Motivational quote (bilingual AR/EN)
-
-### 📝 Daily Journal
-- 📝 **Journal Page** — daily entries with date navigation (past & future)
-- 😊 **Mood Tracker** — tag each entry: happy / neutral / sad / stressed / excited / tired
-- 📖 **Recent entries** displayed as cards below the editor
-
-### 🔍 Universal Search
-- 🔍 Searches across **events, habits & memories** simultaneously
-- Results show with type icon for quick identification
-
-### 📌 Pinned Note
-- 📌 **Sticky note** always visible above the weekly calendar
-- Auto-saved as you type, persists across sessions
-
-### ↩️ Undo Deletions
-- ↩️ **5-second undo toast** after deleting any event, habit or memory
-- One tap restores the deleted item instantly
-
-### 🎨 Tab Color Customizer
-- 🎨 Pick a custom accent color for each tab individually
-- Colors persist across sessions in localStorage
-
-### 📸 Memories
-- 📸 **Memory Journal** — log moments with date, title & description
-- 🖼️ **Photo Attachments** — add a photo to each memory
-- 🎨 **Built-in Drawing Canvas** — sketch with brush size control & eraser
-
-### 🧑 Companion Character (Buddy)
-- 🧑 **Optional floating buddy** — chibi-style animated face
-- 😊 **Mood-reactive** — happy/sad/celebrating based on habit completion
-- 🎨 **Customizable** — 3 girl styles + 3 boy styles, multiple hair colors
-- 💬 **Auto encouragement messages** at random intervals
-
-### 🔐 Authentication & Accounts
-- 📧 **Email & Password** registration and login
-- 🔑 **Google Sign-In** with popup + redirect fallback
-- 😊 **Custom Nickname** — display name instead of showing email
-- 🗑️ **Delete Account** — permanently deletes account and all data
-- 🚪 **Guest Mode** — full offline usage without an account
-
-### 🎨 Personalization
-- 🌍 **Bilingual** — Arabic & English with full RTL/LTR support
-- 🌙 **Dark / Light Mode** with animated sun & moon toggle
-- 🎨 **12 Animated Backgrounds** — sky, sunset, sunrise, rain, forest, ocean, aurora, stars & more
-- 🎵 **6 Ambient Sounds** — rain, waves, fire, wind, piano & lo-fi (Web Audio API, zero external links)
-- 🕐 **12h / 24h Time Format** toggle
-- 🎨 **Custom tab colors** per section
-
-### ☁️ Sync & Storage
-- ☁️ **Cloud Sync** via Firebase Firestore — synced across all devices when logged in
-- 💾 **Offline Fallback** — works fully with localStorage when Firebase is unavailable
-- ⚡ **Memory Cache** — all data cached after first load; zero network calls during normal use
-- 🔒 **Privacy First** — data tied to your account only; full email never displayed
+### 🔐 Auth, Sync & Offline Support
+- **Firebase Authentication**: Email/Password or Google Sign-In.
+- **Cloud Sync**: Data is synced in real-time across all devices via Firestore.
+- **PWA Ready**: Install as a native app on your phone or desktop.
+- **Offline Fallback (Guest Mode)**: Fully functional offline via `localStorage` if not logged in.
+- **Undo Deletions**: 5-second undo toast after deleting any item.
 
 ---
 
@@ -111,69 +59,56 @@
 
 | Technology | Purpose |
 |---|---|
-| HTML / CSS / JavaScript | Structure, design & all logic |
-| Firebase Authentication | Login, registration & Google Sign-In |
-| Firebase Firestore | Cloud data sync |
-| Web Audio API | Ambient sounds generated in-browser |
-| SVG & Canvas | Animated backgrounds, Pomodoro ring & companion character |
-| Notifications API | Scheduled reminders & Pomodoro alerts |
-| localStorage | Offline storage, journal, reminders & session cache |
+| **Vanilla JS, HTML, CSS** | Core structure, design, and logic (No heavy frameworks) |
+| **Firebase Auth & Firestore** | Secure login, Google Sign-In, and real-time cloud data sync |
+| **PWA (Progressive Web App)**| Installable locally with offline caching capabilities |
+| **Web Audio / YouTube API** | Ambient sounds generated directly in-browser |
+| **SVG & HTML5 Canvas** | Animated backgrounds, Pomodoro ring, drawing tool, and buddy |
+| **Web Notifications API** | Scheduled reminders & Pomodoro alerts |
 
 ---
 
 ## 🚀 Getting Started
 
-No installation needed — just open and plan:
+No installation needed! Just open the link and start planning:
 
-1. **Create a free account** with email + optional nickname
-2. **Or sign in with Google**
-3. **Or skip** — use fully offline without an account
+1. **Create a free account** (Email + optional nickname).
+2. **Or sign in with Google**.
+3. **Or use Guest Mode** (Skip login to use fully offline without an account).
 
 ---
 
 ## 🔧 Self-Hosting
 
-Single HTML file — host it anywhere:
+The app is fully contained and easily hostable anywhere:
 
-```
-1. Download index.html
-2. Upload to GitHub Pages, Netlify, Vercel, or any static host
-3. Add your domain to Firebase Console → Authentication → Authorized Domains
-4. Done!
-```
+1. Clone or download the repository.
+2. Host on GitHub Pages, Netlify, Vercel, or any static host.
+3. To enable Cloud Sync, add your domain to **Firebase Console → Authentication → Authorized Domains**.
 
-### Firebase Setup (for cloud sync)
-
-```
-Firebase Console → Authentication → Sign-in method:
-  ✅ Email/Password — Enable
-  ✅ Google — Enable + set support email
-
-Firebase Console → Firestore → Rules:
-  Allow read/write only to authenticated users' own data path
-```
+**Firebase Setup (Optional):**
+- Enable **Email/Password** and **Google** sign-in methods in Firebase Auth.
+- Set Firestore rules to allow read/write *only* to authenticated users' own data paths.
 
 ---
 
 ## 📁 File Structure
 
-```
-index.html    ← The entire app (HTML + CSS + JS in one file)
-README.md     ← This file
-```
+```text
+├── index.html        # Main app entry point
+├── style.css         # Styling, animations, and responsive UI
+├── script.js         # Core logic, Firebase integration, and local storage
+├── manifest.json     # PWA configuration
+└── README.md         # Project documentation
 
----
+🗺️ Roadmap
+[x] PWA Integration (Install as a native app)
 
-## 🗺️ Roadmap
+[ ] PDF weekly report export
 
-- [ ] PWA — install as a native app on any device (coming next)
-- [ ] PDF weekly report export
-- [ ] Share schedule via public read-only link
+[ ] Share schedule via a public read-only link
 
----
+📄 License
+This is a personal project — feel free to fork, adapt, and use it for your own planning needs.
 
-## 📄 License
-
-Personal project — feel free to fork, adapt and use for your own planning needs.
-
-## 👩‍💻 Made with ❤️ by Swzan
+👩‍💻 Made with ❤️ by Swzan Abo Raslan
