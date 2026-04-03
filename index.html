@@ -1352,6 +1352,16 @@ onAuthStateChanged(auth, user => {
 </div>
 
 <script>
+  // أضيفي الدالة هنا لتجنب خطأ ReferenceError
+  function renderStreaks() { 
+    console.log("Streaks renderer placeholder"); 
+  }
+
+  // ثم تأتي الدوال الأخرى
+  function renderHT() {
+    // كود الرسم الخاص بكِ
+  }
+</script>
 /* ═══════════════════════════════════════════
    TRANSLATION SYSTEM
 ═══════════════════════════════════════════ */
