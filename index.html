@@ -371,7 +371,13 @@ body { font-family:'Tajawal',sans-serif; min-height:100vh; color:var(--txt); ove
 .fab:hover { transform:scale(1.12); }
 
 /* ─── STAR FIELD CANVAS ─── */
-#stars-canvas { position:fixed; inset:0; z-index:-1; display:none; }
+#stars-canvas { 
+  position: fixed; 
+  inset: 0; 
+  z-index: -1; 
+  display: none; 
+  overflow: hidden; /* أضيفي هذا السطر */
+}
 
 /* ─── RESPONSIVE ─── */
 /* ════════════════════════════════════════════
