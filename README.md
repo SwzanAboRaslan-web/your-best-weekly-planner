@@ -95,20 +95,22 @@ The app is fully contained and easily hostable anywhere:
 ## 📁 File Structure
 
 ```text
-├── index.html        # Main app entry point
-├── style.css         # Styling, animations, and responsive UI
-├── script.js         # Core logic, Firebase integration, and local storage
+├── index.html        # The entire app — HTML + CSS + JS in one file
+├── sw.js             # Service Worker — offline caching & background sync
 ├── manifest.json     # PWA configuration
+├── icons/            # App icons (72px to 512px)
 └── README.md         # Project documentation
 
-🗺️ Roadmap
-[x] PWA Integration (Install as a native app)
+## 🗺️ Roadmap
+- [x] PWA Integration (Install as a native app)
+- [x] Offline Persistence with IndexedDB (Firestore)
+- [x] Background Sync (data syncs when back online)
+- [ ] PDF weekly report export
+- [ ] Share schedule via a public read-only link
 
-[ ] PDF weekly report export
+---
 
-[ ] Share schedule via a public read-only link
-
-📄 License
+## 📄 License
 This is a personal project — feel free to fork, adapt, and use it for your own planning needs.
 
 👩‍💻 Made with ❤️ by Swzan Abo Raslan
