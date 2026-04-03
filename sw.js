@@ -36,8 +36,13 @@ self.addEventListener('activate', event => {
 
 /* ── Fetch: استراتيجية ذكية ── */
 self.addEventListener('fetch', event => {
+  // 1. تجاهل أي طلبات ليست http أو https (مثل إضافات كروم) لتجنب الأخطاء
+  if (!(event.request.url.indexOf('http') === 0)) return;
+
   const url = new URL(event.request.url);
   if (event.request.method !== 'GET') return;
+
+  // تجاهل طلبات Firebase و APIs الخاصة بجوجل من التخزين في الكاش المحلي
   if (
     url.hostname.includes('firebaseio.com')          ||
     url.hostname.includes('firestore.googleapis.com') ||
@@ -46,15 +51,20 @@ self.addEventListener('fetch', event => {
     url.hostname.includes('identitytoolkit')          ||
     url.hostname.includes('securetoken')
   ) return;
+
+  // استراتيجية الخطوط
   if (url.hostname.includes('fonts.googleapis.com') ||
       url.hostname.includes('fonts.gstatic.com')) {
     event.respondWith(cacheFirst(event.request));
     return;
   }
+
+  // استراتيجية صفحات HTML
   if (url.pathname.endsWith('.html') || url.pathname === '/') {
     event.respondWith(staleWhileRevalidate(event.request));
     return;
   }
+
   event.respondWith(cacheFirst(event.request));
 });
 
@@ -63,19 +73,24 @@ async function cacheFirst(request) {
   if (cached) return cached;
   try {
     const response = await fetch(request);
-    if (response.ok) {
+    // تأكد من أن الرابط http/https قبل محاولة وضعه في الكاش
+    if (response.ok && request.url.indexOf('http') === 0) {
       const cache = await caches.open(CACHE_NAME);
       cache.put(request, response.clone());
     }
     return response;
-  } catch { return caches.match(OFFLINE_URL); }
+  } catch { 
+    return caches.match(OFFLINE_URL); 
+  }
 }
 
 async function staleWhileRevalidate(request) {
   const cache = await caches.open(CACHE_NAME);
   const cached = await cache.match(request);
   const fetchPromise = fetch(request).then(res => {
-    if (res.ok) cache.put(request, res.clone());
+    if (res.ok && request.url.indexOf('http') === 0) {
+        cache.put(request, res.clone());
+    }
     return res;
   }).catch(() => null);
   return cached || fetchPromise || caches.match(OFFLINE_URL);
@@ -94,7 +109,13 @@ self.addEventListener('sync', event => {
 /* ── Push Notifications ── */
 self.addEventListener('push', event => {
   if (!event.data) return;
-  const data = event.data.json();
+  let data = {};
+  try {
+    data = event.data.json();
+  } catch(e) {
+    data = { title: 'مخططي', body: event.data.text() };
+  }
+  
   event.waitUntil(
     self.registration.showNotification(data.title || 'مخططي', {
       body: data.body||'', icon:'./icons/icon-192.png',
